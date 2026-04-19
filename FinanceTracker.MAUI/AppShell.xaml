@@ -3,12 +3,11 @@
     x:Class="FinanceTracker.MAUI.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:FinanceTracker.MAUI"
-    Title="FinanceTracker.MAUI">
+    xmlns:views="clr-namespace:FinanceTracker.MAUI.Views">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Транзакції"
+        ContentTemplate="{DataTemplate views:TransactionListPage}"
+        Route="transactionlist" />
 
 </Shell>

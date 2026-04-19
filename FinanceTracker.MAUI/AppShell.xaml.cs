@@ -1,10 +1,13 @@
-﻿namespace FinanceTracker.MAUI
+﻿using FinanceTracker.MAUI.Views;
+
+namespace FinanceTracker.MAUI;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        Routing.RegisterRoute("transactiondetail", typeof(TransactionDetailPage));
+        Routing.RegisterRoute("transactionform", typeof(TransactionFormPage));
     }
 }

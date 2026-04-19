@@ -1,5 +1,8 @@
 ﻿using FinanceTracker.DAL;
 using FinanceTracker.DAL.Repositories;
+using FinanceTracker.MAUI.Services;
+using FinanceTracker.MAUI.ViewModels;
+using FinanceTracker.MAUI.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -25,6 +28,17 @@ public static class MauiProgram
 
         // Generic Repository
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        builder.Services.AddScoped<IDataService, LocalDataService>();
+        // ViewModels
+        builder.Services.AddTransient<TransactionListViewModel>();
+        builder.Services.AddTransient<TransactionDetailViewModel>();
+        builder.Services.AddTransient<TransactionFormViewModel>();
+
+        // Views
+        builder.Services.AddTransient<TransactionListPage>();
+        builder.Services.AddTransient<TransactionDetailPage>();
+        builder.Services.AddTransient<TransactionFormPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();
