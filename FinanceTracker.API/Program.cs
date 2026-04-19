@@ -1,7 +1,6 @@
 using FinanceTracker.BLL.Profiles;
 using FinanceTracker.BLL.Services;
 using FinanceTracker.DAL;
-using FinanceTracker.DAL.Entities;
 using FinanceTracker.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,13 +22,22 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Автоматичні міграції
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
