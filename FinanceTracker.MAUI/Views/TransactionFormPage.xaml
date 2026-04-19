@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinanceTracker.MAUI.Views.TransactionFormPage"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Опис" FontAttributes="Bold" />
+            <Entry Text="{Binding Description, Mode=TwoWay}"
+                   Placeholder="Введіть опис" />
+
+            <Label Text="Сума" FontAttributes="Bold" />
+            <Entry Text="{Binding Amount, Mode=TwoWay}"
+                   Keyboard="Numeric"
+                   Placeholder="0.00" />
+
+            <Label Text="Дата" FontAttributes="Bold" />
+            <DatePicker Date="{Binding Date, Mode=TwoWay}" />
+
+            <Label Text="Дохід?" FontAttributes="Bold" />
+            <Switch IsToggled="{Binding IsIncome, Mode=TwoWay}" />
+
+            <Button Text="Зберегти"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotBusy}"
+                    BackgroundColor="#512BD4"
+                    TextColor="White" />
+
+            <Button Text="Скасувати"
+                    Command="{Binding CancelCommand}"
+                    BackgroundColor="Gray"
+                    TextColor="White" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
