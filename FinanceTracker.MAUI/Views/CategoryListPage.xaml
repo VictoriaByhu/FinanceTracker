@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinanceTracker.MAUI.Views.CategoryListPage"
+             Title="{Binding Title}"
+             BackgroundColor="#1A1A2E">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding GoToAddCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <RefreshView Command="{Binding LoadCategoriesCommand}"
+                 IsRefreshing="{Binding IsBusy}">
+        <CollectionView ItemsSource="{Binding Categories}">
+
+            <CollectionView.EmptyView>
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     Spacing="10" Margin="0,50,0,0">
+                    <Label Text="🗂️" FontSize="48" HorizontalOptions="Center"/>
+                    <Label Text="Категорій ще немає"
+                           TextColor="#888888" FontSize="16"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="15,5" Padding="15"
+                           BackgroundColor="#16213E"
+                           CornerRadius="15" HasShadow="True">
+                        <Grid ColumnDefinitions="Auto, *, Auto">
+
+                            <Frame Grid.Column="0"
+                                   BackgroundColor="#0F3460"
+                                   CornerRadius="22"
+                                   WidthRequest="44" HeightRequest="44"
+                                   Padding="0" HasShadow="False">
+                                <Label FontSize="20"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsIncome}"
+                                                     Value="True">
+                                            <Setter Property="Text" Value="💰"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsIncome}"
+                                                     Value="False">
+                                            <Setter Property="Text" Value="💸"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </Frame>
+
+                            <VerticalStackLayout Grid.Column="1"
+                                                 Margin="12,0" Spacing="3">
+                                <Label Text="{Binding Name}"
+                                       TextColor="White"
+                                       FontSize="15"
+                                       FontAttributes="Bold"/>
+                                <Label TextColor="#888888" FontSize="12">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsIncome}"
+                                                     Value="True">
+                                            <Setter Property="Text" Value="Дохід"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label"
+                                                     Binding="{Binding IsIncome}"
+                                                     Value="False">
+                                            <Setter Property="Text" Value="Витрата"/>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Button Grid.Column="2"
+                                    Text="🗑️"
+                                    BackgroundColor="Transparent"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>
