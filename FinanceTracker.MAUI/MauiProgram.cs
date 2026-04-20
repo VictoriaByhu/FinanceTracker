@@ -30,15 +30,20 @@ public static class MauiProgram
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         builder.Services.AddScoped<IDataService, LocalDataService>();
+
         // ViewModels
         builder.Services.AddTransient<TransactionListViewModel>();
         builder.Services.AddTransient<TransactionDetailViewModel>();
         builder.Services.AddTransient<TransactionFormViewModel>();
+        builder.Services.AddTransient<CategoryListViewModel>();
+        builder.Services.AddTransient<CategoryFormViewModel>();
 
         // Views
         builder.Services.AddTransient<TransactionListPage>();
         builder.Services.AddTransient<TransactionDetailPage>();
         builder.Services.AddTransient<TransactionFormPage>();
+        builder.Services.AddTransient<CategoryListPage>();
+        builder.Services.AddTransient<CategoryFormPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

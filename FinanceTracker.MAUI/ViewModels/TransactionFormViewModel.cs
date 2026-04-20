@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using FinanceTracker.DAL.Entities;
 using FinanceTracker.MAUI.Services;
 
@@ -8,6 +9,15 @@ namespace FinanceTracker.MAUI.ViewModels;
 public class TransactionFormViewModel : BaseViewModel
 {
     private readonly IDataService _dataService;
+
+    public ObservableCollection<Category> Categories { get; } = new();
+
+    private Category? _selectedCategory;
+    public Category? SelectedCategory
+    {
+        get => _selectedCategory;
+        set { _selectedCategory = value; OnPropertyChanged(); }
+    }
 
     private int _transactionId;
     public int TransactionId
@@ -50,13 +60,6 @@ public class TransactionFormViewModel : BaseViewModel
         set { _isIncome = value; OnPropertyChanged(); }
     }
 
-    private int _categoryId;
-    public int CategoryId
-    {
-        get => _categoryId;
-        set { _categoryId = value; OnPropertyChanged(); }
-    }
-
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
 
@@ -64,6 +67,7 @@ public class TransactionFormViewModel : BaseViewModel
     {
         _dataService = dataService;
         Title = "Нова транзакція";
+        LoadCategoriesAsync().ConfigureAwait(false);
 
         SaveCommand = new Command(async () =>
         {
@@ -75,6 +79,11 @@ public class TransactionFormViewModel : BaseViewModel
             if (Amount <= 0)
             {
                 await Shell.Current.DisplayAlert("Помилка", "Введіть суму більше нуля", "OK");
+                return;
+            }
+            if (SelectedCategory is null)
+            {
+                await Shell.Current.DisplayAlert("Помилка", "Оберіть категорію", "OK");
                 return;
             }
 
@@ -89,7 +98,7 @@ public class TransactionFormViewModel : BaseViewModel
                         Amount = Amount,
                         Date = Date,
                         IsIncome = IsIncome,
-                        CategoryId = CategoryId == 0 ? 1 : CategoryId
+                        CategoryId = SelectedCategory.Id
                     };
                     await _dataService.CreateTransactionAsync(newTransaction);
                 }
@@ -102,7 +111,7 @@ public class TransactionFormViewModel : BaseViewModel
                         existing.Amount = Amount;
                         existing.Date = Date;
                         existing.IsIncome = IsIncome;
-                        existing.CategoryId = CategoryId;
+                        existing.CategoryId = SelectedCategory.Id;
                         await _dataService.UpdateTransactionAsync(existing);
                     }
                 }
@@ -124,6 +133,27 @@ public class TransactionFormViewModel : BaseViewModel
             await Shell.Current.GoToAsync(".."));
     }
 
+    private async Task LoadCategoriesAsync()
+    {
+        try
+        {
+            var categories = await _dataService.GetAllCategoriesAsync();
+            Categories.Clear();
+            foreach (var c in categories)
+                Categories.Add(c);
+
+            if (!Categories.Any())
+            {
+                await Shell.Current.DisplayAlert(
+                    "Увага",
+                    "Спочатку створіть категорію у вкладці Категорії",
+                    "OK");
+                await Shell.Current.GoToAsync("..");
+            }
+        }
+        catch (Exception) { }
+    }
+
     private async Task LoadTransactionAsync(int id)
     {
         try
@@ -137,13 +167,10 @@ public class TransactionFormViewModel : BaseViewModel
                 Amount = transaction.Amount;
                 Date = transaction.Date;
                 IsIncome = transaction.IsIncome;
-                CategoryId = transaction.CategoryId;
+                SelectedCategory = Categories.FirstOrDefault(c => c.Id == transaction.CategoryId);
             }
         }
-        catch (Exception)
-        {
-            await Shell.Current.DisplayAlert("Помилка", "Не вдалося завантажити дані", "OK");
-        }
+        catch (Exception) { }
         finally
         {
             IsBusy = false;

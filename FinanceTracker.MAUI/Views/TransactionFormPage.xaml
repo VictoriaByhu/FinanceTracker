@@ -2,36 +2,56 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.TransactionFormPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="#1A1A2E">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="Опис" FontAttributes="Bold" />
+            <Label Text="Опис" TextColor="White" FontAttributes="Bold"/>
             <Entry Text="{Binding Description, Mode=TwoWay}"
-                   Placeholder="Введіть опис" />
+                   Placeholder="Введіть опис"
+                   PlaceholderColor="#555555"
+                   TextColor="White"
+                   BackgroundColor="#16213E"/>
 
-            <Label Text="Сума" FontAttributes="Bold" />
+            <Label Text="Сума" TextColor="White" FontAttributes="Bold"/>
             <Entry Text="{Binding Amount, Mode=TwoWay}"
                    Keyboard="Numeric"
-                   Placeholder="0.00" />
+                   Placeholder="0.00"
+                   PlaceholderColor="#555555"
+                   TextColor="White"
+                   BackgroundColor="#16213E"/>
 
-            <Label Text="Дата" FontAttributes="Bold" />
-            <DatePicker Date="{Binding Date, Mode=TwoWay}" />
+            <Label Text="Дата" TextColor="White" FontAttributes="Bold"/>
+            <DatePicker Date="{Binding Date, Mode=TwoWay}"
+                        TextColor="White"
+                        BackgroundColor="#16213E"/>
 
-            <Label Text="Дохід?" FontAttributes="Bold" />
-            <Switch IsToggled="{Binding IsIncome, Mode=TwoWay}" />
+            <Label Text="Категорія" TextColor="White" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding Categories}"
+                    SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                    ItemDisplayBinding="{Binding Name}"
+                    Title="Оберіть категорію"
+                    TitleColor="#555555"
+                    TextColor="White"
+                    BackgroundColor="#16213E"/>
+
+            <Label Text="Дохід?" TextColor="White" FontAttributes="Bold"/>
+            <Switch IsToggled="{Binding IsIncome, Mode=TwoWay}"
+                    OnColor="#4CAF50"/>
 
             <Button Text="Зберегти"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsNotBusy}"
                     BackgroundColor="#512BD4"
-                    TextColor="White" />
+                    TextColor="White"
+                    Margin="0,20,0,0"/>
 
             <Button Text="Скасувати"
                     Command="{Binding CancelCommand}"
-                    BackgroundColor="Gray"
-                    TextColor="White" />
+                    BackgroundColor="#333333"
+                    TextColor="White"/>
 
         </VerticalStackLayout>
     </ScrollView>
