@@ -59,7 +59,7 @@
                      Command="{Binding LoadTransactionsCommand}"
                      IsRefreshing="{Binding IsBusy}">
             <CollectionView ItemsSource="{Binding Transactions}"
-                            SelectionMode="Single"
+                            SelectionMode="None"
                             SelectionChangedCommand="{Binding GoToDetailCommand}"
                             SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}">
 
@@ -82,6 +82,11 @@
                         <Frame Margin="15,5" Padding="15"
                                BackgroundColor="#16213E"
                                CornerRadius="15" HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToDetailCommand}"
+                                        CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto, *, Auto">
 
                                 <Frame Grid.Column="0"
@@ -108,14 +113,17 @@
                                 </Frame>
 
                                 <VerticalStackLayout Grid.Column="1"
-                                                     Margin="12,0" Spacing="3">
+                                    Margin="12,0" Spacing="3">
+                                    <Label Text="{Binding Category.Name}"
+                                        TextColor="White"
+                                        FontSize="15"
+                                        FontAttributes="Bold" />
                                     <Label Text="{Binding Description}"
-                                           TextColor="White"
-                                           FontSize="15"
-                                           FontAttributes="Bold" />
+                                        TextColor="#888888"
+                                        FontSize="12" />
                                     <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}"
-                                           TextColor="#888888"
-                                           FontSize="12" />
+                                        TextColor="#555555"
+                                        FontSize="11" />
                                 </VerticalStackLayout>
 
                                 <Label Grid.Column="2"

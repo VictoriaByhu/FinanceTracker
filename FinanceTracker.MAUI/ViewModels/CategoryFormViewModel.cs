@@ -15,13 +15,6 @@ public class CategoryFormViewModel : BaseViewModel
         set { _name = value; OnPropertyChanged(); }
     }
 
-    private bool _isIncome;
-    public bool IsIncome
-    {
-        get => _isIncome;
-        set { _isIncome = value; OnPropertyChanged(); }
-    }
-
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
 
@@ -43,8 +36,8 @@ public class CategoryFormViewModel : BaseViewModel
                 var category = new Category
                 {
                     Name = Name,
-                    Color = IsIncome ? "#4CAF50" : "#F44336",
-                    IsIncome = IsIncome
+                    Color = "#607D8B",
+                    IsIncome = false
                 };
                 await _dataService.CreateCategoryAsync(category);
                 await Shell.Current.DisplayAlert("Успіх", "Категорію збережено!", "OK");

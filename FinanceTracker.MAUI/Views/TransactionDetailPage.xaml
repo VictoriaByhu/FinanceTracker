@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.TransactionDetailPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             BackgroundColor="#1A1A2E">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Редагувати" Command="{Binding GoToEditCommand}" />
@@ -11,26 +12,84 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="Опис" FontAttributes="Bold" TextColor="Gray" />
-            <Label Text="{Binding Transaction.Description}" FontSize="18" />
+            <!-- Картка з основною інформацією -->
+            <Frame BackgroundColor="#16213E" CornerRadius="20" Padding="20">
+                <VerticalStackLayout Spacing="15">
 
-            <Label Text="Сума" FontAttributes="Bold" TextColor="Gray" />
-            <Label Text="{Binding Transaction.Amount, StringFormat='{0:C}'}"
-                   FontSize="18" />
+                    <Label Text="{Binding Transaction.Category.Name}"
+                           TextColor="White"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"/>
 
-            <Label Text="Дата" FontAttributes="Bold" TextColor="Gray" />
-            <Label Text="{Binding Transaction.Date, StringFormat='{0:dd.MM.yyyy}'}"
-                   FontSize="18" />
+                    <Label FontSize="36"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding Transaction.IsIncome}"
+                                         Value="True">
+                                <Setter Property="TextColor" Value="#4CAF50"/>
+                                <Setter Property="Text" Value="{Binding Transaction.Amount, StringFormat='+₴{0:N2}'}"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding Transaction.IsIncome}"
+                                         Value="False">
+                                <Setter Property="TextColor" Value="#F44336"/>
+                                <Setter Property="Text" Value="{Binding Transaction.Amount, StringFormat='-₴{0:N2}'}"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
 
-            <Label Text="Тип" FontAttributes="Bold" TextColor="Gray" />
-            <Label Text="{Binding Transaction.IsIncome, StringFormat='Дохід: {0}'}"
-                   FontSize="18" />
+                </VerticalStackLayout>
+            </Frame>
 
-            <Button Text="Видалити"
+            <!-- Деталі -->
+            <Frame BackgroundColor="#16213E" CornerRadius="15" Padding="20">
+                <VerticalStackLayout Spacing="15">
+
+                    <Grid ColumnDefinitions="*, *">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Дата" TextColor="#888888" FontSize="12"/>
+                            <Label Text="{Binding Transaction.Date, StringFormat='{0:dd.MM.yyyy}'}"
+                                   TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1">
+                            <Label Text="Тип" TextColor="#888888" FontSize="12"/>
+                            <Label TextColor="White" FontSize="16" FontAttributes="Bold">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Transaction.IsIncome}"
+                                                 Value="True">
+                                        <Setter Property="Text" Value="💰 Дохід"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding Transaction.IsIncome}"
+                                                 Value="False">
+                                        <Setter Property="Text" Value="💸 Витрата"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <BoxView HeightRequest="1" BackgroundColor="#333333"/>
+
+                    <VerticalStackLayout>
+                        <Label Text="Опис" TextColor="#888888" FontSize="12"/>
+                        <Label Text="{Binding Transaction.Description}"
+                               TextColor="White" FontSize="16"/>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <Button Text="Видалити транзакцію"
                     Command="{Binding DeleteCommand}"
-                    BackgroundColor="Red"
+                    BackgroundColor="#F44336"
                     TextColor="White"
-                    Margin="0,20,0,0" />
+                    CornerRadius="15"
+                    Margin="0,10,0,0"/>
 
         </VerticalStackLayout>
     </ScrollView>

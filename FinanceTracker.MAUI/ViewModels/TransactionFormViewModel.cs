@@ -27,8 +27,6 @@ public class TransactionFormViewModel : BaseViewModel
         {
             _transactionId = value;
             OnPropertyChanged();
-            if (value > 0)
-                LoadTransactionAsync(value).ConfigureAwait(false);
         }
     }
 
@@ -67,15 +65,9 @@ public class TransactionFormViewModel : BaseViewModel
     {
         _dataService = dataService;
         Title = "Нова транзакція";
-        LoadCategoriesAsync().ConfigureAwait(false);
 
         SaveCommand = new Command(async () =>
         {
-            if (string.IsNullOrWhiteSpace(Description))
-            {
-                await Shell.Current.DisplayAlert("Помилка", "Введіть опис транзакції", "OK");
-                return;
-            }
             if (Amount <= 0)
             {
                 await Shell.Current.DisplayAlert("Помилка", "Введіть суму більше нуля", "OK");
@@ -133,6 +125,12 @@ public class TransactionFormViewModel : BaseViewModel
             await Shell.Current.GoToAsync(".."));
     }
 
+    // Цей метод викликається коли сторінка з'являється
+    public async Task InitializeAsync()
+    {
+        await LoadCategoriesAsync();
+    }
+
     private async Task LoadCategoriesAsync()
     {
         try
@@ -149,7 +147,12 @@ public class TransactionFormViewModel : BaseViewModel
                     "Спочатку створіть категорію у вкладці Категорії",
                     "OK");
                 await Shell.Current.GoToAsync("..");
+                return;
             }
+
+            // Тільки після завантаження категорій завантажуємо транзакцію
+            if (TransactionId > 0)
+                await LoadTransactionAsync(TransactionId);
         }
         catch (Exception) { }
     }

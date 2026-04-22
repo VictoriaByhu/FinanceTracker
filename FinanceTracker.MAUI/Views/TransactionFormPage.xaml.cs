@@ -9,4 +9,10 @@ public partial class TransactionFormPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        ((TransactionFormViewModel)BindingContext).InitializeAsync().ConfigureAwait(false);
+    }
 }

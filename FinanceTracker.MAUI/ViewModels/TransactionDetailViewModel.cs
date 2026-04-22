@@ -68,7 +68,7 @@ public class TransactionDetailViewModel : BaseViewModel
             IsBusy = true;
             Transaction = await _dataService.GetTransactionByIdAsync(id);
             if (Transaction is not null)
-                Title = Transaction.Description;
+                Title = Transaction.Category?.Name ?? Transaction.Description ?? "Деталі";
         }
         catch (Exception)
         {

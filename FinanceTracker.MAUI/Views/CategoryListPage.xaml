@@ -36,51 +36,25 @@
                                    CornerRadius="22"
                                    WidthRequest="44" HeightRequest="44"
                                    Padding="0" HasShadow="False">
-                                <Label FontSize="20"
+                                <Label Text="🗂️"
+                                       FontSize="20"
                                        HorizontalOptions="Center"
-                                       VerticalOptions="Center">
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IsIncome}"
-                                                     Value="True">
-                                            <Setter Property="Text" Value="💰"/>
-                                        </DataTrigger>
-                                        <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IsIncome}"
-                                                     Value="False">
-                                            <Setter Property="Text" Value="💸"/>
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
+                                       VerticalOptions="Center"/>
                             </Frame>
 
-                            <VerticalStackLayout Grid.Column="1"
-                                                 Margin="12,0" Spacing="3">
-                                <Label Text="{Binding Name}"
-                                       TextColor="White"
-                                       FontSize="15"
-                                       FontAttributes="Bold"/>
-                                <Label TextColor="#888888" FontSize="12">
-                                    <Label.Triggers>
-                                        <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IsIncome}"
-                                                     Value="True">
-                                            <Setter Property="Text" Value="Дохід"/>
-                                        </DataTrigger>
-                                        <DataTrigger TargetType="Label"
-                                                     Binding="{Binding IsIncome}"
-                                                     Value="False">
-                                            <Setter Property="Text" Value="Витрата"/>
-                                        </DataTrigger>
-                                    </Label.Triggers>
-                                </Label>
-                            </VerticalStackLayout>
+                            <Label Grid.Column="1"
+                                   Text="{Binding Name}"
+                                   TextColor="White"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   Margin="12,0"
+                                   VerticalOptions="Center"/>
 
                             <Button Grid.Column="2"
                                     Text="🗑️"
                                     BackgroundColor="Transparent"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding .}" />
+                                    CommandParameter="{Binding .}"/>
                         </Grid>
                     </Frame>
                 </DataTemplate>

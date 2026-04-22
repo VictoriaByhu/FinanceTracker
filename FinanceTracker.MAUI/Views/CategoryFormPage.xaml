@@ -16,19 +16,6 @@
                    TextColor="White"
                    BackgroundColor="#16213E"/>
 
-            <Label Text="Тип категорії"
-                   TextColor="White" FontAttributes="Bold"/>
-            <Grid ColumnDefinitions="Auto, *">
-                <Switch Grid.Column="0"
-                        IsToggled="{Binding IsIncome, Mode=TwoWay}"
-                        OnColor="#4CAF50"/>
-                <Label Grid.Column="1"
-                       Text="Дохід (вимкнено = витрата)"
-                       TextColor="#888888"
-                       VerticalOptions="Center"
-                       Margin="10,0"/>
-            </Grid>
-
             <Button Text="Зберегти"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsNotBusy}"

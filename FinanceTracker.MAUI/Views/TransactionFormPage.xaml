@@ -8,26 +8,6 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="Опис" TextColor="White" FontAttributes="Bold"/>
-            <Entry Text="{Binding Description, Mode=TwoWay}"
-                   Placeholder="Введіть опис"
-                   PlaceholderColor="#555555"
-                   TextColor="White"
-                   BackgroundColor="#16213E"/>
-
-            <Label Text="Сума" TextColor="White" FontAttributes="Bold"/>
-            <Entry Text="{Binding Amount, Mode=TwoWay}"
-                   Keyboard="Numeric"
-                   Placeholder="0.00"
-                   PlaceholderColor="#555555"
-                   TextColor="White"
-                   BackgroundColor="#16213E"/>
-
-            <Label Text="Дата" TextColor="White" FontAttributes="Bold"/>
-            <DatePicker Date="{Binding Date, Mode=TwoWay}"
-                        TextColor="White"
-                        BackgroundColor="#16213E"/>
-
             <Label Text="Категорія" TextColor="White" FontAttributes="Bold"/>
             <Picker ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
@@ -37,9 +17,52 @@
                     TextColor="White"
                     BackgroundColor="#16213E"/>
 
-            <Label Text="Дохід?" TextColor="White" FontAttributes="Bold"/>
-            <Switch IsToggled="{Binding IsIncome, Mode=TwoWay}"
-                    OnColor="#4CAF50"/>
+            <Label Text="Сума" TextColor="White" FontAttributes="Bold"/>
+            <Entry Text="{Binding Amount, Mode=TwoWay}"
+                   Keyboard="Numeric"
+                   Placeholder="0.00"
+                   PlaceholderColor="#555555"
+                   TextColor="White"
+                   BackgroundColor="#16213E"/>
+
+            <Label Text="Опис (необов'язково)"
+                   TextColor="White" FontAttributes="Bold"/>
+            <Entry Text="{Binding Description, Mode=TwoWay}"
+                   Placeholder="Введіть опис"
+                   PlaceholderColor="#555555"
+                   TextColor="White"
+                   BackgroundColor="#16213E"/>
+
+            <Label Text="Дата" TextColor="White" FontAttributes="Bold"/>
+            <DatePicker Date="{Binding Date, Mode=TwoWay}"
+                        TextColor="White"
+                        BackgroundColor="#16213E"/>
+
+            <Label Text="Тип" TextColor="White" FontAttributes="Bold"/>
+            <Frame BackgroundColor="#16213E" CornerRadius="12" Padding="15">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Label Grid.Column="0"
+                           TextColor="#888888"
+                           FontSize="14"
+                           VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding IsIncome}"
+                                         Value="True">
+                                <Setter Property="Text" Value="💰 Дохід"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label"
+                                         Binding="{Binding IsIncome}"
+                                         Value="False">
+                                <Setter Property="Text" Value="💸 Витрата"/>
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Switch Grid.Column="1"
+                            IsToggled="{Binding IsIncome, Mode=TwoWay}"
+                            OnColor="#4CAF50"/>
+                </Grid>
+            </Frame>
 
             <Button Text="Зберегти"
                     Command="{Binding SaveCommand}"
