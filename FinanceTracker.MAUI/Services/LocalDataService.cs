@@ -1,5 +1,7 @@
-﻿using FinanceTracker.DAL.Entities;
+﻿using FinanceTracker.DAL;
+using FinanceTracker.DAL.Entities;
 using FinanceTracker.DAL.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinanceTracker.MAUI.Services;
 
@@ -7,13 +9,16 @@ public class LocalDataService : IDataService
 {
     private readonly IRepository<Transaction> _transactionRepository;
     private readonly IRepository<Category> _categoryRepository;
+    private readonly AppDbContext _context;
 
     public LocalDataService(
         IRepository<Transaction> transactionRepository,
-        IRepository<Category> categoryRepository)
+        IRepository<Category> categoryRepository,
+        AppDbContext context)
     {
         _transactionRepository = transactionRepository;
         _categoryRepository = categoryRepository;
+        _context = context;
     }
 
     // Transactions
@@ -21,7 +26,9 @@ public class LocalDataService : IDataService
     {
         try
         {
-            return await _transactionRepository.GetAllAsync();
+            return await _context.Transactions
+                .Include(t => t.Category)
+                .ToListAsync();
         }
         catch (Exception)
         {
@@ -33,7 +40,9 @@ public class LocalDataService : IDataService
     {
         try
         {
-            return await _transactionRepository.GetByIdAsync(id);
+            return await _context.Transactions
+                .Include(t => t.Category)
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
         catch (Exception)
         {
