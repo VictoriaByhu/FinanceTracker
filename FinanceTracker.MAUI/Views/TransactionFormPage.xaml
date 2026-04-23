@@ -8,16 +8,16 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="Категорія" TextColor="White" FontAttributes="Bold"/>
+            <Label Text="Category" TextColor="White" FontAttributes="Bold"/>
             <Picker ItemsSource="{Binding Categories}"
                     SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                     ItemDisplayBinding="{Binding Name}"
-                    Title="Оберіть категорію"
+                    Title="Select Category"
                     TitleColor="#555555"
                     TextColor="White"
                     BackgroundColor="#16213E"/>
 
-            <Label Text="Сума" TextColor="White" FontAttributes="Bold"/>
+            <Label Text="Amount" TextColor="White" FontAttributes="Bold"/>
             <Entry Text="{Binding Amount, Mode=TwoWay}"
                    Keyboard="Numeric"
                    Placeholder="0.00"
@@ -25,20 +25,20 @@
                    TextColor="White"
                    BackgroundColor="#16213E"/>
 
-            <Label Text="Опис (необов'язково)"
+            <Label Text="Description (optional)"
                    TextColor="White" FontAttributes="Bold"/>
             <Entry Text="{Binding Description, Mode=TwoWay}"
-                   Placeholder="Введіть опис"
+                   Placeholder="Enter description"
                    PlaceholderColor="#555555"
                    TextColor="White"
                    BackgroundColor="#16213E"/>
 
-            <Label Text="Дата" TextColor="White" FontAttributes="Bold"/>
+            <Label Text="Date" TextColor="White" FontAttributes="Bold"/>
             <DatePicker Date="{Binding Date, Mode=TwoWay}"
                         TextColor="White"
                         BackgroundColor="#16213E"/>
 
-            <Label Text="Тип" TextColor="White" FontAttributes="Bold"/>
+            <Label Text="Type" TextColor="White" FontAttributes="Bold"/>
             <Frame BackgroundColor="#16213E" CornerRadius="12" Padding="15">
                 <Grid ColumnDefinitions="*, Auto">
                     <Label Grid.Column="0"
@@ -49,12 +49,12 @@
                             <DataTrigger TargetType="Label"
                                          Binding="{Binding IsIncome}"
                                          Value="True">
-                                <Setter Property="Text" Value="💰 Дохід"/>
+                                <Setter Property="Text" Value="💰 Income"/>
                             </DataTrigger>
                             <DataTrigger TargetType="Label"
                                          Binding="{Binding IsIncome}"
                                          Value="False">
-                                <Setter Property="Text" Value="💸 Витрата"/>
+                                <Setter Property="Text" Value="💸 Expense"/>
                             </DataTrigger>
                         </Label.Triggers>
                     </Label>
@@ -64,14 +64,14 @@
                 </Grid>
             </Frame>
 
-            <Button Text="Зберегти"
+            <Button Text="Save"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsNotBusy}"
                     BackgroundColor="#512BD4"
                     TextColor="White"
                     Margin="0,20,0,0"/>
 
-            <Button Text="Скасувати"
+            <Button Text="Cancel"
                     Command="{Binding CancelCommand}"
                     BackgroundColor="#333333"
                     TextColor="White"/>

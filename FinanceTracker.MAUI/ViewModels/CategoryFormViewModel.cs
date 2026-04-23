@@ -21,13 +21,13 @@ public class CategoryFormViewModel : BaseViewModel
     public CategoryFormViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        Title = "Нова категорія";
+        Title = "New Category";
 
         SaveCommand = new Command(async () =>
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                await Shell.Current.DisplayAlert("Помилка", "Введіть назву категорії", "OK");
+                await Shell.Current.DisplayAlert("Error", "Please enter a category name", "OK");
                 return;
             }
             try
@@ -40,12 +40,12 @@ public class CategoryFormViewModel : BaseViewModel
                     IsIncome = false
                 };
                 await _dataService.CreateCategoryAsync(category);
-                await Shell.Current.DisplayAlert("Успіх", "Категорію збережено!", "OK");
+                await Shell.Current.DisplayAlert("Success", "Category saved!", "OK");
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Помилка", "Не вдалося зберегти", "OK");
+                await Shell.Current.DisplayAlert("Error", "Failed to save category", "OK");
             }
             finally
             {

@@ -27,7 +27,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Автоматичні міграції
+// automatic migrations
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

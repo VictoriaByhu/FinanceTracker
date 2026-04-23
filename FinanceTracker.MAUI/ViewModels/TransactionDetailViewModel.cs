@@ -38,12 +38,12 @@ public class TransactionDetailViewModel : BaseViewModel
     public TransactionDetailViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        Title = "Деталі транзакції";
+        Title = "Transaction Details";
 
         DeleteCommand = new Command(async () =>
         {
             bool confirmed = await Shell.Current.DisplayAlert(
-                "Увага", "Видалити транзакцію?", "Так", "Ні");
+                "Warning", "Delete transaction?", "Yes", "No");
             if (!confirmed) return;
 
             try
@@ -53,7 +53,7 @@ public class TransactionDetailViewModel : BaseViewModel
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Помилка", "Не вдалося видалити", "OK");
+                await Shell.Current.DisplayAlert("Error", "Failed to delete transaction", "OK");
             }
         });
 
@@ -68,11 +68,11 @@ public class TransactionDetailViewModel : BaseViewModel
             IsBusy = true;
             Transaction = await _dataService.GetTransactionByIdAsync(id);
             if (Transaction is not null)
-                Title = Transaction.Category?.Name ?? Transaction.Description ?? "Деталі";
+                Title = Transaction.Category?.Name ?? Transaction.Description ?? "Transaction Details";
         }
         catch (Exception)
         {
-            await Shell.Current.DisplayAlert("Помилка", "Не вдалося завантажити дані", "OK");
+            await Shell.Current.DisplayAlert("Error", "Failed to load transaction data", "OK");
         }
         finally
         {

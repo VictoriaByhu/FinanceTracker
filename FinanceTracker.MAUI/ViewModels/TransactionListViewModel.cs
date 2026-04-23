@@ -75,7 +75,7 @@ public class TransactionListViewModel : BaseViewModel
         }
         catch (Exception)
         {
-            await Shell.Current.DisplayAlert("Помилка", "Не вдалося завантажити дані", "OK");
+            await Shell.Current.DisplayAlert("Error", "Failed to load data", "OK");
         }
         finally
         {

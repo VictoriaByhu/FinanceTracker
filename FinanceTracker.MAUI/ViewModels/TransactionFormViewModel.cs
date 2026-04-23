@@ -64,18 +64,18 @@ public class TransactionFormViewModel : BaseViewModel
     public TransactionFormViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        Title = "Нова транзакція";
+        Title = "New Transaction";
 
         SaveCommand = new Command(async () =>
         {
             if (Amount <= 0)
             {
-                await Shell.Current.DisplayAlert("Помилка", "Введіть суму більше нуля", "OK");
+                await Shell.Current.DisplayAlert("Error", "Please enter an amount greater than zero", "OK");
                 return;
             }
             if (SelectedCategory is null)
             {
-                await Shell.Current.DisplayAlert("Помилка", "Оберіть категорію", "OK");
+                await Shell.Current.DisplayAlert("Error", "Please select a category", "OK");
                 return;
             }
 
@@ -108,12 +108,12 @@ public class TransactionFormViewModel : BaseViewModel
                     }
                 }
 
-                await Shell.Current.DisplayAlert("Успіх", "Збережено!", "OK");
+                await Shell.Current.DisplayAlert("Success", "Saved!", "OK");
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Помилка", "Не вдалося зберегти", "OK");
+                await Shell.Current.DisplayAlert("Error", "Failed to save transaction", "OK");
             }
             finally
             {
@@ -125,7 +125,7 @@ public class TransactionFormViewModel : BaseViewModel
             await Shell.Current.GoToAsync(".."));
     }
 
-    // Цей метод викликається коли сторінка з'являється
+    // This method is called when the page appears
     public async Task InitializeAsync()
     {
         await LoadCategoriesAsync();
@@ -143,14 +143,14 @@ public class TransactionFormViewModel : BaseViewModel
             if (!Categories.Any())
             {
                 await Shell.Current.DisplayAlert(
-                    "Увага",
-                    "Спочатку створіть категорію у вкладці Категорії",
+                    "Warning",
+                    "Please create a category in the Categories tab first",
                     "OK");
                 await Shell.Current.GoToAsync("..");
                 return;
             }
 
-            // Тільки після завантаження категорій завантажуємо транзакцію
+            // This is called only after loading categories
             if (TransactionId > 0)
                 await LoadTransactionAsync(TransactionId);
         }
@@ -162,7 +162,7 @@ public class TransactionFormViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            Title = "Редагування";
+            Title = "Editing";
             var transaction = await _dataService.GetTransactionByIdAsync(id);
             if (transaction is not null)
             {

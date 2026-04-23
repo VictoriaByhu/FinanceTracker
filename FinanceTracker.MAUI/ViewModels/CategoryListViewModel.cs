@@ -18,7 +18,7 @@ public class CategoryListViewModel : BaseViewModel
     public CategoryListViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        Title = "Категорії";
+        Title = "Category";
 
         LoadCategoriesCommand = new Command(async () => await LoadCategoriesAsync());
         GoToAddCommand = new Command(async () =>
@@ -27,7 +27,7 @@ public class CategoryListViewModel : BaseViewModel
         {
             if (category is null) return;
             bool confirmed = await Shell.Current.DisplayAlert(
-                "Увага", $"Видалити категорію '{category.Name}'?", "Так", "Ні");
+                "Warning", $"Delete category '{category.Name}'?", "Yes", "No");
             if (!confirmed) return;
             try
             {
@@ -36,7 +36,7 @@ public class CategoryListViewModel : BaseViewModel
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Помилка", "Не вдалося видалити", "OK");
+                await Shell.Current.DisplayAlert("Error", "Failed to delete category", "OK");
             }
         });
     }
@@ -54,7 +54,7 @@ public class CategoryListViewModel : BaseViewModel
         }
         catch (Exception)
         {
-            await Shell.Current.DisplayAlert("Помилка", "Не вдалося завантажити", "OK");
+            await Shell.Current.DisplayAlert("Error", "Failed to load categories", "OK");
         }
         finally
         {

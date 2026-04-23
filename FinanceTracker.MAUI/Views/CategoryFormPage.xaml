@@ -8,22 +8,22 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="Назва категорії"
+            <Label Text="Category Name"
                    TextColor="White" FontAttributes="Bold"/>
             <Entry Text="{Binding Name, Mode=TwoWay}"
-                   Placeholder="Наприклад: Їжа, Зарплата..."
+                   Placeholder="For example: Food, Salary..."
                    PlaceholderColor="#555555"
                    TextColor="White"
                    BackgroundColor="#16213E"/>
 
-            <Button Text="Зберегти"
+            <Button Text="Save"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsNotBusy}"
                     BackgroundColor="#512BD4"
                     TextColor="White"
                     Margin="0,20,0,0"/>
 
-            <Button Text="Скасувати"
+            <Button Text="Cancel"
                     Command="{Binding CancelCommand}"
                     BackgroundColor="#333333"
                     TextColor="White"/>

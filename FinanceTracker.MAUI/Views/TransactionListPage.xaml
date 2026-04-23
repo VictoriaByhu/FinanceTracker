@@ -11,11 +11,11 @@
 
     <Grid RowDefinitions="Auto, Auto, *">
 
-        <!-- Верхня картка з балансом -->
+        <!-- Balance Frame -->
         <Frame Grid.Row="0" Margin="15,15,15,5" Padding="20"
                BackgroundColor="#16213E" CornerRadius="20" HasShadow="True">
             <VerticalStackLayout Spacing="5">
-                <Label Text="Загальний баланс"
+                <Label Text="Total balance"
                        TextColor="#888888"
                        FontSize="14"
                        HorizontalOptions="Center" />
@@ -28,7 +28,7 @@
                     <Frame Grid.Column="0" BackgroundColor="#0F3460"
                            CornerRadius="12" Padding="10" Margin="0,0,5,0">
                         <VerticalStackLayout>
-                            <Label Text="Доходи" TextColor="#4CAF50"
+                            <Label Text="Income" TextColor="#4CAF50"
                                    FontSize="12" HorizontalOptions="Center"/>
                             <Label Text="{Binding TotalIncome, StringFormat='₴{0:N2}'}"
                                    TextColor="White" FontAttributes="Bold"
@@ -38,7 +38,7 @@
                     <Frame Grid.Column="1" BackgroundColor="#0F3460"
                            CornerRadius="12" Padding="10" Margin="5,0,0,0">
                         <VerticalStackLayout>
-                            <Label Text="Витрати" TextColor="#F44336"
+                            <Label Text="Expenses" TextColor="#F44336"
                                    FontSize="12" HorizontalOptions="Center"/>
                             <Label Text="{Binding TotalExpenses, StringFormat='₴{0:N2}'}"
                                    TextColor="White" FontAttributes="Bold"
@@ -49,12 +49,12 @@
             </VerticalStackLayout>
         </Frame>
 
-        <!-- Заголовок списку -->
-        <Label Grid.Row="1" Text="Транзакції"
+        <!-- List title -->
+        <Label Grid.Row="1" Text="Transactions"
                TextColor="White" FontSize="18"
                FontAttributes="Bold" Margin="20,10,0,5" />
 
-        <!-- Список транзакцій -->
+        <!-- Transaction List -->
         <RefreshView Grid.Row="2"
                      Command="{Binding LoadTransactionsCommand}"
                      IsRefreshing="{Binding IsBusy}">
@@ -68,10 +68,10 @@
                                         VerticalOptions="Center" Spacing="10"
                                         Margin="0,50,0,0">
                         <Label Text="💸" FontSize="48" HorizontalOptions="Center"/>
-                        <Label Text="Транзакцій ще немає"
+                        <Label Text="No transactions yet"
                                TextColor="#888888" FontSize="16"
                                HorizontalOptions="Center"/>
-                        <Label Text="Натисніть + щоб додати"
+                        <Label Text="Press + to add one"
                                TextColor="#555555" FontSize="14"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>

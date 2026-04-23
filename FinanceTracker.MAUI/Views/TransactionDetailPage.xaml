@@ -12,7 +12,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <!-- Картка з основною інформацією -->
+            <!-- Main Info -->
             <Frame BackgroundColor="#16213E" CornerRadius="20" Padding="20">
                 <VerticalStackLayout Spacing="15">
 
@@ -44,29 +44,29 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <!-- Деталі -->
+            <!-- Details -->
             <Frame BackgroundColor="#16213E" CornerRadius="15" Padding="20">
                 <VerticalStackLayout Spacing="15">
 
                     <Grid ColumnDefinitions="*, *">
                         <VerticalStackLayout Grid.Column="0">
-                            <Label Text="Дата" TextColor="#888888" FontSize="12"/>
+                            <Label Text="Date" TextColor="#888888" FontSize="12"/>
                             <Label Text="{Binding Transaction.Date, StringFormat='{0:dd.MM.yyyy}'}"
                                    TextColor="White" FontSize="16" FontAttributes="Bold"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Grid.Column="1">
-                            <Label Text="Тип" TextColor="#888888" FontSize="12"/>
+                            <Label Text="Type" TextColor="#888888" FontSize="12"/>
                             <Label TextColor="White" FontSize="16" FontAttributes="Bold">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label"
                                                  Binding="{Binding Transaction.IsIncome}"
                                                  Value="True">
-                                        <Setter Property="Text" Value="💰 Дохід"/>
+                                        <Setter Property="Text" Value="💰 Income"/>
                                     </DataTrigger>
                                     <DataTrigger TargetType="Label"
                                                  Binding="{Binding Transaction.IsIncome}"
                                                  Value="False">
-                                        <Setter Property="Text" Value="💸 Витрата"/>
+                                        <Setter Property="Text" Value="💸 Expense"/>
                                     </DataTrigger>
                                 </Label.Triggers>
                             </Label>
@@ -76,7 +76,7 @@
                     <BoxView HeightRequest="1" BackgroundColor="#333333"/>
 
                     <VerticalStackLayout>
-                        <Label Text="Опис" TextColor="#888888" FontSize="12"/>
+                        <Label Text="Description" TextColor="#888888" FontSize="12"/>
                         <Label Text="{Binding Transaction.Description}"
                                TextColor="White" FontSize="16"/>
                     </VerticalStackLayout>
@@ -84,7 +84,7 @@
                 </VerticalStackLayout>
             </Frame>
 
-            <Button Text="Видалити транзакцію"
+            <Button Text="Delete Transaction"
                     Command="{Binding DeleteCommand}"
                     BackgroundColor="#F44336"
                     TextColor="White"

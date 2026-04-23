@@ -18,7 +18,7 @@
                                      VerticalOptions="Center"
                                      Spacing="10" Margin="0,50,0,0">
                     <Label Text="🗂️" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="Категорій ще немає"
+                    <Label Text="There is no categories yet"
                            TextColor="#888888" FontSize="16"
                            HorizontalOptions="Center"/>
                 </VerticalStackLayout>
