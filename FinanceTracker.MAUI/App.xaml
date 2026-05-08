@@ -2,6 +2,7 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FinanceTracker.MAUI"
+             xmlns:converters="clr-namespace:FinanceTracker.MAUI.Converters"
              x:Class="FinanceTracker.MAUI.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -9,6 +10,13 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <converters:BoolToAmountColorConverter x:Key="BoolToAmountColorConverter"/>
+            <converters:BoolToBadgeBgConverter     x:Key="BoolToBadgeBgConverter"/>
+            <converters:BoolToIncomeColorConverter x:Key="BoolToIncomeColorConverter"/>
+            <converters:BoolToIconConverter        x:Key="BoolToIconConverter"/>
+            <converters:StringToColorConverter     x:Key="StringToColorConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
