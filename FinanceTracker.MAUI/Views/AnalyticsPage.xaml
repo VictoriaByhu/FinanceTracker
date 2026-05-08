@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FinanceTracker.MAUI.Views.AnalyticsPage"
+             Title="Аналітика"
+             BackgroundColor="#12122A">
+
+    <RefreshView Command="{Binding LoadAnalyticsCommand}"
+                 IsRefreshing="{Binding IsBusy}"
+                 RefreshColor="#A78BFA">
+        <ScrollView>
+            <VerticalStackLayout Padding="12,12,12,24" Spacing="12">
+
+                <VerticalStackLayout Spacing="2">
+                    <Label Text="Аналітика"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="{Binding MonthTitle}"
+                           FontSize="13"
+                           TextColor="#9CA3AF"/>
+                </VerticalStackLayout>
+
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                    <Border Grid.Row="0" Grid.Column="0"
+                            BackgroundColor="#16213E"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Доходи" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="{Binding MonthlyIncomeText}" FontSize="18" FontAttributes="Bold" TextColor="#1D9E75"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="0" Grid.Column="1"
+                            BackgroundColor="#16213E"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Витрати" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="{Binding MonthlyExpensesText}" FontSize="18" FontAttributes="Bold" TextColor="#E24B4A"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="0"
+                            BackgroundColor="#16213E"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Баланс" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="{Binding MonthlyBalanceText}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1"
+                            BackgroundColor="#16213E"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Транзакції" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="{Binding TransactionCountText}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border BackgroundColor="#16213E"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="14,12">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Найбільше витрат"
+                                   FontSize="12"
+                                   TextColor="#9CA3AF"/>
+                            <Label Text="{Binding TopExpenseCategory}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="1"
+                               Text="↘"
+                               FontSize="24"
+                               TextColor="#E24B4A"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+
+                <Label Text="Витрати по категоріях"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       Margin="4,6,4,0"/>
+
+                <VerticalStackLayout IsVisible="{Binding HasNoExpenses}"
+                                     Padding="0,20"
+                                     Spacing="6"
+                                     HorizontalOptions="Center">
+                    <Label Text="За цей місяць витрат ще немає"
+                           FontSize="14"
+                           TextColor="#9CA3AF"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding CategoryExpenses}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="#16213E"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                        <Ellipse Grid.Column="0"
+                                                 WidthRequest="10"
+                                                 HeightRequest="10"
+                                                 VerticalOptions="Center">
+                                            <Ellipse.Fill>
+                                                <Binding Path="Color" Converter="{StaticResource StringToColorConverter}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Name}"
+                                               TextColor="White"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="2"
+                                               Text="{Binding AmountText}"
+                                               TextColor="#E24B4A"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <ProgressBar Grid.Column="0"
+                                                     Progress="{Binding Progress}"
+                                                     ProgressColor="#A78BFA"
+                                                     BackgroundColor="#1E1E3A"
+                                                     VerticalOptions="Center"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding PercentText}"
+                                               FontSize="12"
+                                               TextColor="#9CA3AF"/>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Label Text="Бюджети по категоріях"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       Margin="4,10,4,0"/>
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding CategoryBudgets}" Spacing="8">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="#16213E"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12"
+                                    Padding="12">
+                                <VerticalStackLayout Spacing="9">
+                                    <Grid ColumnDefinitions="Auto,*,100" ColumnSpacing="10">
+                                        <Ellipse Grid.Column="0"
+                                                 WidthRequest="10"
+                                                 HeightRequest="10"
+                                                 VerticalOptions="Center">
+                                            <Ellipse.Fill>
+                                                <Binding Path="Color" Converter="{StaticResource StringToColorConverter}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding Name}"
+                                               TextColor="White"
+                                               FontAttributes="Bold"
+                                               VerticalOptions="Center"/>
+                                        <Frame Grid.Column="2"
+                                                BackgroundColor="#12122A"
+                                                CornerRadius="8"
+                                                Padding="4,0"
+                                                HasShadow="False"
+                                                BorderColor="Transparent">
+                                            <Entry Text="{Binding BudgetText, Mode=TwoWay}"
+                                                    Keyboard="Numeric"
+                                                    Placeholder="Бюджет"
+                                                    PlaceholderColor="#6B7280"
+                                                    TextColor="White"
+                                                    FontSize="12"
+                                                    HorizontalTextAlignment="End"
+                                                    BackgroundColor="Transparent"/>
+                                        </Frame>
+                                    </Grid>
+
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding SpentText}"
+                                               FontSize="12"
+                                               TextColor="#9CA3AF"/>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding ProgressText}"
+                                               FontSize="12"
+                                               TextColor="{Binding StatusColor}"/>
+                                    </Grid>
+
+                                    <ProgressBar Progress="{Binding Progress}"
+                                                 ProgressColor="{Binding ProgressColor}"
+                                                 BackgroundColor="#1E1E3A"/>
+
+                                    <Label Text="{Binding RemainingText}"
+                                           FontSize="12"
+                                           TextColor="{Binding StatusColor}"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>
