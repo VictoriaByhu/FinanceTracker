@@ -2,31 +2,133 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.CategoryFormPage"
-             Title="{Binding Title}"
-             BackgroundColor="#1A1A2E">
+             Title="Нова категорія"
+             BackgroundColor="#12122A">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="16" Spacing="14">
 
-            <Label Text="Category Name"
-                   TextColor="White" FontAttributes="Bold"/>
-            <Entry Text="{Binding Name, Mode=TwoWay}"
-                   Placeholder="For example: Food, Salary..."
-                   PlaceholderColor="#555555"
-                   TextColor="White"
-                   BackgroundColor="#16213E"/>
+            <!-- Category name -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Назва категорії" FontSize="13" TextColor="#9CA3AF"/>
+                <Border BackgroundColor="#16213E"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
+                    <Entry Text="{Binding Name}"
+                           TextColor="White"
+                           BackgroundColor="Transparent"
+                           PlaceholderColor="#6B7280"
+                           Placeholder="Наприклад: Їжа, Зарплата..."
+                           FontSize="15"
+                           Margin="12,8"/>
+                </Border>
+            </VerticalStackLayout>
 
-            <Button Text="Save"
+            <!-- Color picker (uses existing Color field) -->
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Колір" FontSize="13" TextColor="#9CA3AF"/>
+                <FlexLayout Wrap="Wrap" JustifyContent="Start">
+
+                    <BindableLayout.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>#1D9E75</x:String>
+                            <x:String>#E24B4A</x:String>
+                            <x:String>#A78BFA</x:String>
+                            <x:String>#EF9F27</x:String>
+                            <x:String>#3B82F6</x:String>
+                            <x:String>#EC4899</x:String>
+                            <x:String>#10B981</x:String>
+                            <x:String>#F97316</x:String>
+                        </x:Array>
+                    </BindableLayout.ItemsSource>
+
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+
+                            <!-- Margin тут заміняє Gap -->
+                            <Grid WidthRequest="38"
+                                HeightRequest="38"
+                                Margin="5">
+
+                                <!-- Outer ring when selected -->
+                                <Ellipse WidthRequest="38"
+                                    HeightRequest="38"
+                                    Stroke="#A78BFA"
+                                    StrokeThickness="2"
+                                    IsVisible="False"/>
+
+                                <!-- Color circle -->
+                                <Ellipse WidthRequest="28"
+                                    HeightRequest="28"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center">
+
+                                    <Ellipse.Fill>
+                                        <Binding Converter="{StaticResource StringToColorConverter}"/>
+                                    </Ellipse.Fill>
+
+                                </Ellipse>
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                          Path=BindingContext.SelectColorCommand}"
+                                        CommandParameter="{Binding .}"/>
+                                </Grid.GestureRecognizers>
+
+                            </Grid>
+
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+
+                </FlexLayout>
+            </VerticalStackLayout>
+
+            <!-- Preview -->
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Попередній перегляд" FontSize="13" TextColor="#9CA3AF"/>
+                <Border BackgroundColor="#16213E"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12">
+                    <Grid ColumnDefinitions="Auto,*" Padding="14,12" ColumnSpacing="12">
+                        <Ellipse Grid.Column="0"
+                                 WidthRequest="10" HeightRequest="10"
+                                 VerticalOptions="Center">
+                            <Ellipse.Fill>
+                                <Binding Path="BindingContext.SelectedColor"
+                                         Source="{RelativeSource AncestorType={x:Type ContentPage}}"
+                                         Converter="{StaticResource StringToColorConverter}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <Label Grid.Column="1"
+                               Text="{Binding Name}"
+                               FontSize="14" TextColor="White"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <!-- Save -->
+            <Button Text="Зберегти"
                     Command="{Binding SaveCommand}"
-                    IsEnabled="{Binding IsNotBusy}"
-                    BackgroundColor="#512BD4"
+                    BackgroundColor="#7C3AED"
                     TextColor="White"
-                    Margin="0,20,0,0"/>
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="12"
+                    HeightRequest="52"
+                    IsEnabled="{Binding IsNotBusy}"
+                    Margin="0,8,0,0"/>
 
-            <Button Text="Cancel"
+            <!-- Cancel -->
+            <Button Text="Скасувати"
                     Command="{Binding CancelCommand}"
-                    BackgroundColor="#333333"
-                    TextColor="White"/>
+                    BackgroundColor="#1E1E3A"
+                    TextColor="#9CA3AF"
+                    FontSize="16"
+                    CornerRadius="12"
+                    HeightRequest="52"
+                    IsEnabled="{Binding IsNotBusy}"/>
 
         </VerticalStackLayout>
     </ScrollView>

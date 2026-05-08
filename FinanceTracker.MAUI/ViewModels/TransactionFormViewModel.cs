@@ -55,8 +55,15 @@ public class TransactionFormViewModel : BaseViewModel
     public bool IsIncome
     {
         get => _isIncome;
-        set { _isIncome = value; OnPropertyChanged(); }
+        set
+        {
+            _isIncome = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(TypeLabel));
+        }
     }
+
+    public string TypeLabel => IsIncome ? "Дохід" : "Витрата";
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }

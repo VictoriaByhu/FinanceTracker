@@ -2,63 +2,91 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.CategoryListPage"
-             Title="{Binding Title}"
-             BackgroundColor="#1A1A2E">
+             Title="Категорії"
+             BackgroundColor="#12122A">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+" Command="{Binding GoToAddCommand}" />
-    </ContentPage.ToolbarItems>
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="0,0,8,0">
+            <Label Text="Категорії"
+                   FontSize="18" FontAttributes="Bold"
+                   TextColor="White" VerticalOptions="Center"/>
+            <ImageButton Grid.Column="1"
+                         Command="{Binding GoToAddCommand}"
+                         BackgroundColor="Transparent"
+                         WidthRequest="36" HeightRequest="36">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="+" Color="#A78BFA" Size="24"/>
+                </ImageButton.Source>
+            </ImageButton>
+        </Grid>
+    </Shell.TitleView>
 
-    <RefreshView Command="{Binding LoadCategoriesCommand}"
-                 IsRefreshing="{Binding IsBusy}">
-        <CollectionView ItemsSource="{Binding Categories}">
+    <ScrollView>
+        <VerticalStackLayout Padding="12,12,12,0" Spacing="0">
 
-            <CollectionView.EmptyView>
-                <VerticalStackLayout HorizontalOptions="Center"
-                                     VerticalOptions="Center"
-                                     Spacing="10" Margin="0,50,0,0">
-                    <Label Text="🗂️" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="There is no categories yet"
-                           TextColor="#888888" FontSize="16"
-                           HorizontalOptions="Center"/>
-                </VerticalStackLayout>
-            </CollectionView.EmptyView>
+            <!-- Empty state -->
+            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                 HorizontalOptions="Center"
+                                 Padding="0,60,0,0" Spacing="8">
+                <Label Text="🗂" FontSize="40" HorizontalOptions="Center"/>
+                <Label Text="Категорій ще немає"
+                       FontSize="14" TextColor="#9CA3AF"
+                       HorizontalOptions="Center"/>
+                <Label Text="Натисніть + щоб додати"
+                       FontSize="12" TextColor="#6B7280"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Margin="15,5" Padding="15"
-                           BackgroundColor="#16213E"
-                           CornerRadius="15" HasShadow="True">
-                        <Grid ColumnDefinitions="Auto, *, Auto">
+            <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0,0,0,8">
+                            <Border BackgroundColor="#16213E"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 12">
+                                <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                                      Padding="14,12" ColumnSpacing="12">
 
-                            <Frame Grid.Column="0"
-                                   BackgroundColor="#0F3460"
-                                   CornerRadius="22"
-                                   WidthRequest="44" HeightRequest="44"
-                                   Padding="0" HasShadow="False">
-                                <Label Text="🗂️"
-                                       FontSize="20"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"/>
-                            </Frame>
+                                    <!-- Color dot -->
+                                    <Ellipse Grid.Column="0"
+                                             WidthRequest="10" HeightRequest="10"
+                                             VerticalOptions="Center">
+                                        <Ellipse.Fill>
+                                            <Binding Path="Color"
+                                                     Converter="{StaticResource StringToColorConverter}"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
 
-                            <Label Grid.Column="1"
-                                   Text="{Binding Name}"
-                                   TextColor="White"
-                                   FontSize="15"
-                                   FontAttributes="Bold"
-                                   Margin="12,0"
-                                   VerticalOptions="Center"/>
+                                    <!-- Name -->
+                                    <Label Grid.Column="1"
+                                           Text="{Binding Name}"
+                                           FontSize="14" TextColor="White"
+                                           VerticalOptions="Center"/>
 
-                            <Button Grid.Column="2"
-                                    Text="🗑️"
-                                    BackgroundColor="Transparent"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding .}"/>
+                                    <!-- Transaction count -->
+                                    <Label Grid.Column="2"
+                                           Text="{Binding Transactions.Count, StringFormat='{0} транз.'}"
+                                           FontSize="11" TextColor="#6B7280"
+                                           VerticalOptions="Center"/>
+
+                                    <!-- Delete -->
+                                    <ImageButton Grid.Column="3"
+                                                 WidthRequest="32" HeightRequest="32"
+                                                 BackgroundColor="Transparent"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                                 CommandParameter="{Binding .}">
+                                        <ImageButton.Source>
+                                            <FontImageSource Glyph="🗑" Color="#6B7280" Size="16"/>
+                                        </ImageButton.Source>
+                                    </ImageButton>
+                                </Grid>
+                            </Border>
                         </Grid>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </RefreshView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Grid HeightRequest="80"/>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -10,6 +10,7 @@ public class CategoryListViewModel : BaseViewModel
     private readonly IDataService _dataService;
 
     public ObservableCollection<Category> Categories { get; } = new();
+    public bool IsEmpty => !Categories.Any();
 
     public ICommand LoadCategoriesCommand { get; }
     public ICommand GoToAddCommand { get; }
@@ -51,6 +52,8 @@ public class CategoryListViewModel : BaseViewModel
             Categories.Clear();
             foreach (var c in categories)
                 Categories.Add(c);
+
+            OnPropertyChanged(nameof(IsEmpty));
         }
         catch (Exception)
         {

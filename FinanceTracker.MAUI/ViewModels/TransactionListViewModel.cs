@@ -11,6 +11,8 @@ public class TransactionListViewModel : BaseViewModel
 
     public ObservableCollection<Transaction> Transactions { get; } = new();
 
+    public bool IsEmpty => !Transactions.Any();
+
     private Transaction? _selectedTransaction;
     public Transaction? SelectedTransaction
     {
@@ -72,6 +74,8 @@ public class TransactionListViewModel : BaseViewModel
             TotalIncome = Transactions.Where(t => t.IsIncome).Sum(t => t.Amount);
             TotalExpenses = Transactions.Where(t => !t.IsIncome).Sum(t => t.Amount);
             TotalBalance = TotalIncome - TotalExpenses;
+
+            OnPropertyChanged(nameof(IsEmpty));
         }
         catch (Exception)
         {

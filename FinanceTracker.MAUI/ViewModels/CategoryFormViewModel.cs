@@ -15,8 +15,16 @@ public class CategoryFormViewModel : BaseViewModel
         set { _name = value; OnPropertyChanged(); }
     }
 
+    private string _selectedColor = "#607D8B";
+    public string SelectedColor
+    {
+        get => _selectedColor;
+        set { _selectedColor = value; OnPropertyChanged(); }
+    }
+
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
+    public ICommand SelectColorCommand { get; }
 
     public CategoryFormViewModel(IDataService dataService)
     {
@@ -36,7 +44,7 @@ public class CategoryFormViewModel : BaseViewModel
                 var category = new Category
                 {
                     Name = Name,
-                    Color = "#607D8B",
+                    Color = SelectedColor,
                     IsIncome = false
                 };
                 await _dataService.CreateCategoryAsync(category);
@@ -55,5 +63,11 @@ public class CategoryFormViewModel : BaseViewModel
 
         CancelCommand = new Command(async () =>
             await Shell.Current.GoToAsync(".."));
+
+        SelectColorCommand = new Command<string>(color =>
+        {
+            if (!string.IsNullOrWhiteSpace(color))
+                SelectedColor = color;
+        });
     }
 }

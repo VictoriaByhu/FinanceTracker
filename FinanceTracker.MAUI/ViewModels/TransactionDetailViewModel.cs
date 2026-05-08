@@ -29,11 +29,26 @@ public class TransactionDetailViewModel : BaseViewModel
         {
             _transaction = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(AmountFormatted));
+            OnPropertyChanged(nameof(TypeLabel));
         }
     }
 
+    public string AmountFormatted
+    {
+        get
+        {
+            if (Transaction is null) return "₴0";
+            var sign = Transaction.IsIncome ? "+" : "−";
+            return $"{sign}₴{Transaction.Amount:N0}";
+        }
+    }
+
+    public string TypeLabel => Transaction?.IsIncome == true ? "Дохід" : "Витрата";
+
     public ICommand DeleteCommand { get; }
     public ICommand GoToEditCommand { get; }
+    public ICommand GoBackCommand { get; }
 
     public TransactionDetailViewModel(IDataService dataService)
     {
@@ -59,6 +74,9 @@ public class TransactionDetailViewModel : BaseViewModel
 
         GoToEditCommand = new Command(async () =>
             await Shell.Current.GoToAsync($"transactionform?id={TransactionId}"));
+
+        GoBackCommand = new Command(async () =>
+            await Shell.Current.GoToAsync(".."));
     }
 
     private async Task LoadTransactionAsync(int id)
