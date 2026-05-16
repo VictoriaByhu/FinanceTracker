@@ -16,7 +16,13 @@ public class TransactionFormViewModel : BaseViewModel
     public Category? SelectedCategory
     {
         get => _selectedCategory;
-        set { _selectedCategory = value; OnPropertyChanged(); }
+        set
+        {
+            _selectedCategory = value;
+            if (_selectedCategory is not null)
+                IsIncome = _selectedCategory.IsIncome;
+            OnPropertyChanged();
+        }
     }
 
     private int _transactionId;
@@ -63,7 +69,7 @@ public class TransactionFormViewModel : BaseViewModel
         }
     }
 
-    public string TypeLabel => IsIncome ? "Дохід" : "Витрата";
+    public string TypeLabel => IsIncome ? "Income" : "Expense";
 
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
@@ -71,18 +77,19 @@ public class TransactionFormViewModel : BaseViewModel
     public TransactionFormViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        Title = "New Transaction";
+        Title = "New transaction";
 
         SaveCommand = new Command(async () =>
         {
+            ErrorMessage = string.Empty;
             if (Amount <= 0)
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter an amount greater than zero", "OK");
+                ErrorMessage = "Enter an amount greater than zero";
                 return;
             }
             if (SelectedCategory is null)
             {
-                await Shell.Current.DisplayAlert("Error", "Please select a category", "OK");
+                ErrorMessage = "Choose a category";
                 return;
             }
 
@@ -96,7 +103,7 @@ public class TransactionFormViewModel : BaseViewModel
                         Description = Description,
                         Amount = Amount,
                         Date = Date,
-                        IsIncome = IsIncome,
+                        IsIncome = SelectedCategory.IsIncome,
                         CategoryId = SelectedCategory.Id
                     };
                     await _dataService.CreateTransactionAsync(newTransaction);
@@ -109,18 +116,17 @@ public class TransactionFormViewModel : BaseViewModel
                         existing.Description = Description;
                         existing.Amount = Amount;
                         existing.Date = Date;
-                        existing.IsIncome = IsIncome;
+                        existing.IsIncome = SelectedCategory.IsIncome;
                         existing.CategoryId = SelectedCategory.Id;
                         await _dataService.UpdateTransactionAsync(existing);
                     }
                 }
 
-                await Shell.Current.DisplayAlert("Success", "Saved!", "OK");
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Error", "Failed to save transaction", "OK");
+                ErrorMessage = "Failed to save transaction";
             }
             finally
             {
@@ -149,10 +155,7 @@ public class TransactionFormViewModel : BaseViewModel
 
             if (!Categories.Any())
             {
-                await Shell.Current.DisplayAlert(
-                    "Warning",
-                    "Please create a category in the Categories tab first",
-                    "OK");
+                ErrorMessage = "Create a category in the Categories tab first";
                 await Shell.Current.GoToAsync("..");
                 return;
             }
@@ -169,7 +172,7 @@ public class TransactionFormViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            Title = "Editing";
+            Title = "Edit transaction";
             var transaction = await _dataService.GetTransactionByIdAsync(id);
             if (transaction is not null)
             {

@@ -38,15 +38,24 @@ public class TransactionDetailViewModel : BaseViewModel
     {
         get
         {
-            if (Transaction is null) return "₴0";
-            var sign = Transaction.IsIncome ? "+" : "−";
-            return $"{sign}₴{Transaction.Amount:N0}";
+            if (Transaction is null) return "?0";
+            var sign = Transaction.IsIncome ? "+" : "?";
+            return $"{sign}?{Transaction.Amount:N0}";
         }
     }
 
-    public string TypeLabel => Transaction?.IsIncome == true ? "Дохід" : "Витрата";
+    public string TypeLabel => Transaction?.IsIncome == true ? "Income" : "Expense";
+
+    private bool _isDeleteDialogVisible;
+    public bool IsDeleteDialogVisible
+    {
+        get => _isDeleteDialogVisible;
+        set { _isDeleteDialogVisible = value; OnPropertyChanged(); }
+    }
 
     public ICommand DeleteCommand { get; }
+    public ICommand ConfirmDeleteCommand { get; }
+    public ICommand CancelDeleteCommand { get; }
     public ICommand GoToEditCommand { get; }
     public ICommand GoBackCommand { get; }
 
@@ -55,20 +64,20 @@ public class TransactionDetailViewModel : BaseViewModel
         _dataService = dataService;
         Title = "Transaction Details";
 
-        DeleteCommand = new Command(async () =>
-        {
-            bool confirmed = await Shell.Current.DisplayAlert(
-                "Warning", "Delete transaction?", "Yes", "No");
-            if (!confirmed) return;
+        DeleteCommand = new Command(() => IsDeleteDialogVisible = true);
+        CancelDeleteCommand = new Command(() => IsDeleteDialogVisible = false);
 
+        ConfirmDeleteCommand = new Command(async () =>
+        {
             try
             {
+                IsDeleteDialogVisible = false;
                 await _dataService.DeleteTransactionAsync(TransactionId);
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Error", "Failed to delete transaction", "OK");
+                ErrorMessage = "Failed to delete transaction";
             }
         });
 
@@ -90,7 +99,7 @@ public class TransactionDetailViewModel : BaseViewModel
         }
         catch (Exception)
         {
-            await Shell.Current.DisplayAlert("Error", "Failed to load transaction data", "OK");
+            ErrorMessage = "Failed to load transaction data";
         }
         finally
         {

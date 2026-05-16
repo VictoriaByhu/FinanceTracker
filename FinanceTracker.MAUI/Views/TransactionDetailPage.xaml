@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.TransactionDetailPage"
              Title="{Binding Transaction.Description}"
-             BackgroundColor="#12122A">
+             BackgroundColor="#0F2F28">
 
     <!-- Shell uses the native back button on this page. -->
     <!--
@@ -14,7 +14,7 @@
                          BackgroundColor="Transparent"
                          WidthRequest="36" HeightRequest="36">
                 <ImageButton.Source>
-                    <FontImageSource Glyph="←" Color="#A78BFA" Size="20"/>
+                    <FontImageSource Glyph="←" Color="#7DD3B0" Size="20"/>
                 </ImageButton.Source>
             </ImageButton>
             <Label Grid.Column="1"
@@ -27,11 +27,12 @@
     </Shell.TitleView>
     -->
 
+    <Grid>
     <ScrollView>
         <VerticalStackLayout Padding="12" Spacing="10">
 
             <!-- Hero card -->
-            <Border BackgroundColor="#16213E"
+            <Border BackgroundColor="#173D34"
                     StrokeThickness="0"
                     StrokeShape="RoundRectangle 16">
                 <VerticalStackLayout Padding="16,18" Spacing="10" HorizontalOptions="Center">
@@ -79,12 +80,12 @@
 
                 <!-- Date -->
                 <Border Grid.Row="0" Grid.Column="0"
-                        BackgroundColor="#16213E"
+                        BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12"
                         Padding="12,10">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Дата" FontSize="11" TextColor="#9CA3AF"/>
+                        <Label Text="Date" FontSize="11" TextColor="#9CA3AF"/>
                         <Label Text="{Binding Transaction.Date, StringFormat='{0:dd.MM.yyyy}'}"
                                FontSize="14" TextColor="White" FontAttributes="Bold"/>
                     </VerticalStackLayout>
@@ -92,12 +93,12 @@
 
                 <!-- Category -->
                 <Border Grid.Row="0" Grid.Column="1"
-                        BackgroundColor="#16213E"
+                        BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12"
                         Padding="12,10">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Категорія" FontSize="11" TextColor="#9CA3AF"/>
+                        <Label Text="Category" FontSize="11" TextColor="#9CA3AF"/>
                         <Label Text="{Binding Transaction.Category.Name}"
                                FontSize="14" TextColor="White" FontAttributes="Bold"/>
                     </VerticalStackLayout>
@@ -105,12 +106,12 @@
 
                 <!-- Description full width -->
                 <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                        BackgroundColor="#16213E"
+                        BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12"
                         Padding="12,10">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Опис" FontSize="11" TextColor="#9CA3AF"/>
+                        <Label Text="Description" FontSize="11" TextColor="#9CA3AF"/>
                         <Label Text="{Binding Transaction.Description}"
                                FontSize="14" TextColor="White"
                                LineBreakMode="WordWrap"/>
@@ -119,9 +120,9 @@
             </Grid>
 
             <!-- Edit button (primary) -->
-            <Button Text="✏ Редагувати"
+            <Button Text="Edit"
                     Command="{Binding GoToEditCommand}"
-                    BackgroundColor="#7C3AED"
+                    BackgroundColor="#2FAF7A"
                     TextColor="White"
                     FontAttributes="Bold"
                     FontSize="15"
@@ -134,7 +135,7 @@
                     Stroke="#E24B4A"
                     BackgroundColor="#3D1A1A"
                     StrokeShape="RoundRectangle 12">
-                <Button Text="🗑 Видалити транзакцію"
+                <Button Text="Delete transaction"
                         Command="{Binding DeleteCommand}"
                         BackgroundColor="Transparent"
                         TextColor="#E24B4A"
@@ -143,6 +144,58 @@
                         IsEnabled="{Binding IsNotBusy}"/>
             </Border>
 
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="#3D1A1A"
+                    Stroke="#E24B4A"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="12,10">
+                <Label Text="{Binding ErrorMessage}"
+                       FontSize="13"
+                       TextColor="#FCA5A5"
+                       LineBreakMode="WordWrap"/>
+            </Border>
+
         </VerticalStackLayout>
     </ScrollView>
+        <Grid IsVisible="{Binding IsDeleteDialogVisible}"
+              BackgroundColor="#99000000"
+              Padding="22">
+            <Border BackgroundColor="#173D34"
+                    Stroke="#2D5A4F"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 18"
+                    Padding="20"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Heads up"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="Delete this transaction?"
+                           FontSize="14"
+                           TextColor="#D1D5DB"
+                           LineBreakMode="WordWrap"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0"
+                                Text="No"
+                                Command="{Binding CancelDeleteCommand}"
+                                BackgroundColor="#1D493F"
+                                TextColor="#D1D5DB"
+                                CornerRadius="14"
+                                HeightRequest="46"/>
+                        <Button Grid.Column="1"
+                                Text="Yes"
+                                Command="{Binding ConfirmDeleteCommand}"
+                                BackgroundColor="#2FAF7A"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="14"
+                                HeightRequest="46"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
 </ContentPage>

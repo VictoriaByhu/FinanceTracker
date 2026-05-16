@@ -3,18 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.TransactionFormPage"
              Title="{Binding Title}"
-             BackgroundColor="#12122A">
+             BackgroundColor="#0F2F28">
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="14">
 
-            <!-- Category picker -->
             <VerticalStackLayout Spacing="6">
-                <Label Text="Категорія" FontSize="13" TextColor="#9CA3AF"/>
-                <Border BackgroundColor="#16213E"
+                <Label Text="Category" FontSize="13" TextColor="#9CA3AF"/>
+                <Border BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12">
-                    <Picker Title="Оберіть категорію"
+                    <Picker Title="Choose a category"
                             TitleColor="#6B7280"
                             ItemsSource="{Binding Categories}"
                             ItemDisplayBinding="{Binding Name}"
@@ -25,10 +24,30 @@
                 </Border>
             </VerticalStackLayout>
 
-            <!-- Amount -->
             <VerticalStackLayout Spacing="6">
-                <Label Text="Сума" FontSize="13" TextColor="#9CA3AF"/>
-                <Border BackgroundColor="#16213E"
+                <Label Text="Type" FontSize="13" TextColor="#9CA3AF"/>
+                <Border StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        Stroke="{Binding IsIncome, Converter={StaticResource BoolToAmountColorConverter}}"
+                        BackgroundColor="{Binding IsIncome, Converter={StaticResource BoolToBadgeBgConverter}}">
+                    <Grid ColumnDefinitions="Auto,*" Padding="14,12" ColumnSpacing="10">
+                        <Label Grid.Column="0"
+                               Text="{Binding IsIncome, Converter={StaticResource BoolToIconConverter}}"
+                               FontSize="18"
+                               VerticalOptions="Center"/>
+                        <Label Grid.Column="1"
+                               Text="{Binding TypeLabel}"
+                               FontSize="15"
+                               FontAttributes="Bold"
+                               TextColor="{Binding IsIncome, Converter={StaticResource BoolToAmountColorConverter}}"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Amount" FontSize="13" TextColor="#9CA3AF"/>
+                <Border BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12">
                     <Entry Text="{Binding Amount}"
@@ -42,26 +61,24 @@
                 </Border>
             </VerticalStackLayout>
 
-            <!-- Description -->
             <VerticalStackLayout Spacing="6">
-                <Label Text="Опис (необов'язково)" FontSize="13" TextColor="#9CA3AF"/>
-                <Border BackgroundColor="#16213E"
+                <Label Text="Description (optional)" FontSize="13" TextColor="#9CA3AF"/>
+                <Border BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12">
                     <Entry Text="{Binding Description}"
                            TextColor="White"
                            BackgroundColor="Transparent"
                            PlaceholderColor="#6B7280"
-                           Placeholder="Введіть опис"
+                           Placeholder="Enter a description"
                            FontSize="15"
                            Margin="12,8"/>
                 </Border>
             </VerticalStackLayout>
 
-            <!-- Date -->
             <VerticalStackLayout Spacing="6">
-                <Label Text="Дата" FontSize="13" TextColor="#9CA3AF"/>
-                <Border BackgroundColor="#16213E"
+                <Label Text="Date" FontSize="13" TextColor="#9CA3AF"/>
+                <Border BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12">
                     <DatePicker Date="{Binding Date}"
@@ -72,50 +89,21 @@
                 </Border>
             </VerticalStackLayout>
 
-            <!-- Type toggle -->
-            <VerticalStackLayout Spacing="6">
-                <Label Text="Тип" FontSize="13" TextColor="#9CA3AF"/>
-                <Border StrokeThickness="1"
-                        StrokeShape="RoundRectangle 12">
-                    <!-- Border stroke and bg change with IsIncome -->
-                    <Border.Stroke>
-                        <Binding Path="IsIncome"
-                                 Converter="{StaticResource BoolToAmountColorConverter}"/>
-                    </Border.Stroke>
-                    <Border.BackgroundColor>
-                        <Binding Path="IsIncome"
-                                 Converter="{StaticResource BoolToBadgeBgConverter}"/>
-                    </Border.BackgroundColor>
+            <Border IsVisible="{Binding HasError}"
+                    BackgroundColor="#3D1A1A"
+                    Stroke="#E24B4A"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 12"
+                    Padding="12,10">
+                <Label Text="{Binding ErrorMessage}"
+                       FontSize="13"
+                       TextColor="#FCA5A5"
+                       LineBreakMode="WordWrap"/>
+            </Border>
 
-                    <Grid ColumnDefinitions="Auto,*,Auto" Padding="14,12" ColumnSpacing="10">
-                        <!-- Icon -->
-                        <Label Grid.Column="0"
-                               Text="{Binding IsIncome, Converter={StaticResource BoolToIconConverter}}"
-                               FontSize="18" VerticalOptions="Center"/>
-                        <!-- Label -->
-                        <Label Grid.Column="1"
-                               Text="{Binding TypeLabel}"
-                               FontSize="15" FontAttributes="Bold"
-                               VerticalOptions="Center">
-                            <Label.TextColor>
-                                <Binding Path="IsIncome"
-                                         Converter="{StaticResource BoolToAmountColorConverter}"/>
-                            </Label.TextColor>
-                        </Label>
-                        <!-- Toggle switch -->
-                        <Switch Grid.Column="2"
-                                IsToggled="{Binding IsIncome}"
-                                OnColor="#7C3AED"
-                                ThumbColor="White"
-                                VerticalOptions="Center"/>
-                    </Grid>
-                </Border>
-            </VerticalStackLayout>
-
-            <!-- Save button -->
-            <Button Text="Зберегти"
+            <Button Text="Save"
                     Command="{Binding SaveCommand}"
-                    BackgroundColor="#7C3AED"
+                    BackgroundColor="#2FAF7A"
                     TextColor="White"
                     FontAttributes="Bold"
                     FontSize="16"
@@ -124,10 +112,9 @@
                     IsEnabled="{Binding IsNotBusy}"
                     Margin="0,8,0,0"/>
 
-            <!-- Cancel button -->
-            <Button Text="Скасувати"
+            <Button Text="Cancel"
                     Command="{Binding CancelCommand}"
-                    BackgroundColor="#1E1E3A"
+                    BackgroundColor="#1D493F"
                     TextColor="#9CA3AF"
                     FontSize="16"
                     CornerRadius="12"
