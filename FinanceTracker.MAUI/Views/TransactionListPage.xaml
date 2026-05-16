@@ -2,94 +2,209 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.TransactionListPage"
-             BackgroundColor="#12122A">
+             Title="Transactions"
+             BackgroundColor="#0F2F28">
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+" Command="{Binding GoToAddCommand}" Order="Primary"/>
-    </ContentPage.ToolbarItems>
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="0,0,8,0">
+            <Label Text="Transactions"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+            <Button Grid.Column="1"
+                    Text="+"
+                    Command="{Binding GoToAddCommand}"
+                    BackgroundColor="#2FAF7A"
+                    TextColor="White"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    CornerRadius="18"
+                    WidthRequest="36"
+                    HeightRequest="36"
+                    Padding="0"/>
+        </Grid>
+    </Shell.TitleView>
 
     <RefreshView Command="{Binding LoadTransactionsCommand}"
                  IsRefreshing="{Binding IsBusy}"
-                 RefreshColor="#A78BFA">
+                 RefreshColor="#7DD3B0">
         <ScrollView>
             <VerticalStackLayout Spacing="0">
 
-                <!-- Balance card -->
+                <Grid Margin="12,12,12,0"
+                      ColumnDefinitions="44,*,44"
+                      ColumnSpacing="8">
+                    <Button Grid.Column="0"
+                            Text="&#x2039;"
+                            Command="{Binding PreviousMonthCommand}"
+                            BackgroundColor="#1D493F"
+                            TextColor="White"
+                            FontSize="24"
+                            CornerRadius="12"
+                            Padding="0"/>
+                    <Border Grid.Column="1"
+                            BackgroundColor="#173D34"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12,10">
+                        <Label Text="{Binding MonthTitle}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                    <Button Grid.Column="2"
+                            Text="&#x203A;"
+                            Command="{Binding NextMonthCommand}"
+                            IsEnabled="{Binding CanGoNextMonth}"
+                            BackgroundColor="#1D493F"
+                            TextColor="White"
+                            FontSize="24"
+                            CornerRadius="12"
+                            Padding="0"/>
+                </Grid>
+
+                <Button Text="Current month"
+                        Command="{Binding CurrentMonthCommand}"
+                        IsVisible="{Binding IsCurrentMonth, Converter={StaticResource InverseBoolConverter}}"
+                        BackgroundColor="#1D493F"
+                        TextColor="#7DD3B0"
+                        CornerRadius="12"
+                        HeightRequest="42"
+                        Margin="12,8,12,0"/>
+
                 <Border Margin="12,12,12,0"
-                        BackgroundColor="#16213E"
+                        BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 16">
                     <VerticalStackLayout Padding="16,14" Spacing="12">
 
-                        <Label Text="Загальний баланс"
-                               FontSize="12" TextColor="#9CA3AF"
+                        <Label Text="Total balance"
+                               FontSize="12"
+                               TextColor="#9CA3AF"
                                HorizontalOptions="Center"/>
 
                         <Label Text="{Binding TotalBalance, StringFormat='₴{0:N0}'}"
-                               FontSize="32" FontAttributes="Bold"
+                               FontSize="32"
+                               FontAttributes="Bold"
                                TextColor="White"
                                HorizontalOptions="Center"/>
 
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-
-                            <!-- Income -->
                             <Border Grid.Column="0"
                                     BackgroundColor="#1A3D2E"
-                                    StrokeThickness="1" Stroke="#1D9E75"
+                                    StrokeThickness="1"
+                                    Stroke="#1D9E75"
                                     StrokeShape="RoundRectangle 10">
                                 <VerticalStackLayout Padding="10,8" Spacing="3">
-                                    <Label Text="↑ Доходи"
-                                           FontSize="11" TextColor="#9CA3AF"/>
+                                    <Label Text="↑ Income" FontSize="11" TextColor="#9CA3AF"/>
                                     <Label Text="{Binding TotalIncome, StringFormat='₴{0:N0}'}"
-                                           FontSize="15" FontAttributes="Bold"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
                                            TextColor="#1D9E75"/>
                                 </VerticalStackLayout>
                             </Border>
 
-                            <!-- Expenses -->
                             <Border Grid.Column="1"
                                     BackgroundColor="#3D1A1A"
-                                    StrokeThickness="1" Stroke="#E24B4A"
+                                    StrokeThickness="1"
+                                    Stroke="#E24B4A"
                                     StrokeShape="RoundRectangle 10">
                                 <VerticalStackLayout Padding="10,8" Spacing="3">
-                                    <Label Text="↓ Витрати"
-                                           FontSize="11" TextColor="#9CA3AF"/>
+                                    <Label Text="↓ Expenses" FontSize="11" TextColor="#9CA3AF"/>
                                     <Label Text="{Binding TotalExpenses, StringFormat='₴{0:N0}'}"
-                                           FontSize="15" FontAttributes="Bold"
+                                           FontSize="15"
+                                           FontAttributes="Bold"
                                            TextColor="#E24B4A"/>
                                 </VerticalStackLayout>
                             </Border>
-
                         </Grid>
                     </VerticalStackLayout>
                 </Border>
 
-                <!-- Section header -->
-                <Label Text="Транзакції"
-                       FontSize="16" FontAttributes="Bold"
-                       TextColor="White"
-                       Margin="16,16,16,8"/>
+                <Grid Margin="12,16,12,8"
+                      ColumnDefinitions="*,*,*"
+                      ColumnSpacing="8">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#1D493F"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsAllSelected}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#2FAF7A"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowAllCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="All" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" Padding="0,10"/>
+                    </Border>
 
-                <!-- Empty state -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="#1D493F"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsIncomeSelected}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#1D9E75"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowIncomeCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="Income" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" Padding="0,10"/>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            BackgroundColor="#1D493F"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsExpenseSelected}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#E24B4A"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ShowExpensesCommand}"/>
+                        </Border.GestureRecognizers>
+                        <Label Text="Expenses" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" Padding="0,10"/>
+                    </Border>
+                </Grid>
+
+                <Border IsVisible="{Binding HasError}"
+                        Margin="12,0,12,10"
+                        BackgroundColor="#3D1A1A"
+                        Stroke="#E24B4A"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}"
+                           FontSize="13"
+                           TextColor="#FCA5A5"
+                           LineBreakMode="WordWrap"/>
+                </Border>
+
                 <VerticalStackLayout IsVisible="{Binding IsEmpty}"
                                      HorizontalOptions="Center"
-                                     Padding="0,40,0,0" Spacing="8">
-                    <Label Text="💸" FontSize="48" HorizontalOptions="Center"/>
-                    <Label Text="Транзакцій ще немає"
-                           FontSize="15" TextColor="#9CA3AF"
+                                     Padding="0,40,0,0"
+                                     Spacing="8">
+                    <Label Text="No transactions yet"
+                           FontSize="15"
+                           TextColor="#9CA3AF"
                            HorizontalOptions="Center"/>
-                    <Label Text="Натисніть + щоб додати"
-                           FontSize="13" TextColor="#6B7280"
+                    <Label Text="Tap + to add one"
+                           FontSize="13"
+                           TextColor="#6B7280"
                            HorizontalOptions="Center"/>
                 </VerticalStackLayout>
 
-                <!-- Transaction list -->
                 <CollectionView ItemsSource="{Binding Transactions}"
                                 SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Grid Padding="12,0,12,8">
-                                <Border BackgroundColor="#16213E"
+                                <Border BackgroundColor="#173D34"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 14">
                                     <Border.GestureRecognizers>
@@ -99,11 +214,11 @@
                                     </Border.GestureRecognizers>
 
                                     <Grid ColumnDefinitions="44,*,Auto"
-                                          Padding="12,11" ColumnSpacing="10">
-
-                                        <!-- Icon with colored background -->
+                                          Padding="12,11"
+                                          ColumnSpacing="10">
                                         <Border Grid.Column="0"
-                                                WidthRequest="40" HeightRequest="40"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
                                                 StrokeThickness="0"
                                                 StrokeShape="RoundRectangle 10"
                                                 BackgroundColor="{Binding IsIncome, Converter={StaticResource BoolToIncomeColorConverter}}"
@@ -114,12 +229,12 @@
                                                    VerticalOptions="Center"/>
                                         </Border>
 
-                                        <!-- Category name + description • date -->
                                         <VerticalStackLayout Grid.Column="1"
                                                              VerticalOptions="Center"
                                                              Spacing="3">
                                             <Label Text="{Binding Category.Name}"
-                                                   FontSize="14" FontAttributes="Bold"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold"
                                                    TextColor="White"
                                                    LineBreakMode="TailTruncation"/>
                                             <Label FontSize="11" TextColor="#9CA3AF">
@@ -133,27 +248,20 @@
                                             </Label>
                                         </VerticalStackLayout>
 
-                                        <!-- Amount -->
                                         <Label Grid.Column="2"
-                                               FontSize="14" FontAttributes="Bold"
+                                               FontSize="14"
+                                               FontAttributes="Bold"
                                                VerticalOptions="Center"
                                                TextColor="{Binding IsIncome, Converter={StaticResource BoolToAmountColorConverter}}">
                                             <Label.Triggers>
-                                                <DataTrigger TargetType="Label"
-                                                             Binding="{Binding IsIncome}"
-                                                             Value="True">
-                                                    <Setter Property="Text"
-                                                            Value="{Binding Amount, StringFormat='+₴{0:N0}'}"/>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsIncome}" Value="True">
+                                                    <Setter Property="Text" Value="{Binding Amount, StringFormat='+₴{0:N0}'}"/>
                                                 </DataTrigger>
-                                                <DataTrigger TargetType="Label"
-                                                             Binding="{Binding IsIncome}"
-                                                             Value="False">
-                                                    <Setter Property="Text"
-                                                            Value="{Binding Amount, StringFormat='−₴{0:N0}'}"/>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsIncome}" Value="False">
+                                                    <Setter Property="Text" Value="{Binding Amount, StringFormat='−₴{0:N0}'}"/>
                                                 </DataTrigger>
                                             </Label.Triggers>
                                         </Label>
-
                                     </Grid>
                                 </Border>
                             </Grid>
@@ -162,9 +270,7 @@
                 </CollectionView>
 
                 <Grid HeightRequest="24"/>
-
             </VerticalStackLayout>
         </ScrollView>
     </RefreshView>
-
 </ContentPage>
