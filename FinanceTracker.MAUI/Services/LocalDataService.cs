@@ -1,4 +1,4 @@
-﻿using FinanceTracker.DAL;
+using FinanceTracker.DAL;
 using FinanceTracker.DAL.Entities;
 using FinanceTracker.DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -26,9 +26,15 @@ public class LocalDataService : IDataService
     {
         try
         {
-            return await _context.Transactions
+            var transactions = await _context.Transactions
+                .AsNoTracking()
                 .Include(t => t.Category)
                 .ToListAsync();
+
+            foreach (var transaction in transactions.Where(t => t.Category is not null))
+                transaction.IsIncome = transaction.Category.IsIncome;
+
+            return transactions;
         }
         catch (Exception)
         {
@@ -40,9 +46,15 @@ public class LocalDataService : IDataService
     {
         try
         {
-            return await _context.Transactions
+            var transaction = await _context.Transactions
+                .AsNoTracking()
                 .Include(t => t.Category)
                 .FirstOrDefaultAsync(t => t.Id == id);
+
+            if (transaction?.Category is not null)
+                transaction.IsIncome = transaction.Category.IsIncome;
+
+            return transaction;
         }
         catch (Exception)
         {
@@ -54,6 +66,10 @@ public class LocalDataService : IDataService
     {
         try
         {
+            var category = await _categoryRepository.GetByIdAsync(transaction.CategoryId);
+            if (category is not null)
+                transaction.IsIncome = category.IsIncome;
+
             await _transactionRepository.AddAsync(transaction);
             return transaction;
         }
@@ -67,6 +83,10 @@ public class LocalDataService : IDataService
     {
         try
         {
+            var category = await _categoryRepository.GetByIdAsync(transaction.CategoryId);
+            if (category is not null)
+                transaction.IsIncome = category.IsIncome;
+
             await _transactionRepository.UpdateAsync(transaction);
         }
         catch (Exception) { }
@@ -86,7 +106,10 @@ public class LocalDataService : IDataService
     {
         try
         {
-            return await _categoryRepository.GetAllAsync();
+            return await _context.Categories
+                .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .ToListAsync();
         }
         catch (Exception)
         {
@@ -98,7 +121,9 @@ public class LocalDataService : IDataService
     {
         try
         {
-            return await _categoryRepository.GetByIdAsync(id);
+            return await _context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
         catch (Exception)
         {
@@ -123,7 +148,22 @@ public class LocalDataService : IDataService
     {
         try
         {
-            await _categoryRepository.UpdateAsync(category);
+            var existing = await _context.Categories.FindAsync(category.Id);
+            if (existing is null)
+                return;
+
+            existing.Name = category.Name;
+            existing.Color = category.Color;
+            existing.IsIncome = category.IsIncome;
+
+            var transactions = await _context.Transactions
+                .Where(t => t.CategoryId == category.Id)
+                .ToListAsync();
+
+            foreach (var transaction in transactions)
+                transaction.IsIncome = category.IsIncome;
+
+            await _context.SaveChangesAsync();
         }
         catch (Exception) { }
     }

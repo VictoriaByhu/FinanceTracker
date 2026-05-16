@@ -2,78 +2,119 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.AnalyticsPage"
-             Title="Аналітика"
-             BackgroundColor="#12122A">
+             Title="Analytics"
+             BackgroundColor="#0F2F28">
 
     <RefreshView Command="{Binding LoadAnalyticsCommand}"
                  IsRefreshing="{Binding IsBusy}"
-                 RefreshColor="#A78BFA">
+                 RefreshColor="#7DD3B0">
         <ScrollView>
             <VerticalStackLayout Padding="12,12,12,24" Spacing="12">
 
-                <VerticalStackLayout Spacing="2">
-                    <Label Text="Аналітика"
-                           FontSize="22"
-                           FontAttributes="Bold"
-                           TextColor="White"/>
-                    <Label Text="{Binding MonthTitle}"
+                <Grid ColumnDefinitions="44,*,44" ColumnSpacing="8">
+                    <Button Grid.Column="0"
+                            Text="‹"
+                            Command="{Binding PreviousMonthCommand}"
+                            BackgroundColor="#1D493F"
+                            TextColor="White"
+                            FontSize="24"
+                            CornerRadius="12"
+                            Padding="0"/>
+                    <Border Grid.Column="1"
+                            BackgroundColor="#173D34"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="12,10">
+                        <Label Text="{Binding MonthTitle}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="Center"/>
+                    </Border>
+                    <Button Grid.Column="2"
+                            Text="›"
+                            Command="{Binding NextMonthCommand}"
+                            IsEnabled="{Binding CanGoNextMonth}"
+                            BackgroundColor="#1D493F"
+                            TextColor="White"
+                            FontSize="24"
+                            CornerRadius="12"
+                            Padding="0"/>
+                </Grid>
+
+                <Button Text="Current month"
+                        Command="{Binding CurrentMonthCommand}"
+                        IsVisible="{Binding IsCurrentMonth, Converter={StaticResource InverseBoolConverter}}"
+                        BackgroundColor="#1D493F"
+                        TextColor="#7DD3B0"
+                        CornerRadius="12"
+                        HeightRequest="42"/>
+
+                <Border IsVisible="{Binding HasError}"
+                        BackgroundColor="#3D1A1A"
+                        Stroke="#E24B4A"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}"
                            FontSize="13"
-                           TextColor="#9CA3AF"/>
-                </VerticalStackLayout>
+                           TextColor="#FCA5A5"
+                           LineBreakMode="WordWrap"/>
+                </Border>
 
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="8">
                     <Border Grid.Row="0" Grid.Column="0"
-                            BackgroundColor="#16213E"
+                            BackgroundColor="#173D34"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 12"
                             Padding="12">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="Доходи" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="Income" FontSize="12" TextColor="#9CA3AF"/>
                             <Label Text="{Binding MonthlyIncomeText}" FontSize="18" FontAttributes="Bold" TextColor="#1D9E75"/>
                         </VerticalStackLayout>
                     </Border>
 
                     <Border Grid.Row="0" Grid.Column="1"
-                            BackgroundColor="#16213E"
+                            BackgroundColor="#173D34"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 12"
                             Padding="12">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="Витрати" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="Expenses" FontSize="12" TextColor="#9CA3AF"/>
                             <Label Text="{Binding MonthlyExpensesText}" FontSize="18" FontAttributes="Bold" TextColor="#E24B4A"/>
                         </VerticalStackLayout>
                     </Border>
 
                     <Border Grid.Row="1" Grid.Column="0"
-                            BackgroundColor="#16213E"
+                            BackgroundColor="#173D34"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 12"
                             Padding="12">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="Баланс" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="Balance" FontSize="12" TextColor="#9CA3AF"/>
                             <Label Text="{Binding MonthlyBalanceText}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
                         </VerticalStackLayout>
                     </Border>
 
                     <Border Grid.Row="1" Grid.Column="1"
-                            BackgroundColor="#16213E"
+                            BackgroundColor="#173D34"
                             StrokeThickness="0"
                             StrokeShape="RoundRectangle 12"
                             Padding="12">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="Транзакції" FontSize="12" TextColor="#9CA3AF"/>
+                            <Label Text="Transactions" FontSize="12" TextColor="#9CA3AF"/>
                             <Label Text="{Binding TransactionCountText}" FontSize="18" FontAttributes="Bold" TextColor="White"/>
                         </VerticalStackLayout>
                     </Border>
                 </Grid>
 
-                <Border BackgroundColor="#16213E"
+                <Border BackgroundColor="#173D34"
                         StrokeThickness="0"
                         StrokeShape="RoundRectangle 12"
                         Padding="14,12">
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                         <VerticalStackLayout Grid.Column="0" Spacing="4">
-                            <Label Text="Найбільше витрат"
+                            <Label Text="Top expense"
                                    FontSize="12"
                                    TextColor="#9CA3AF"/>
                             <Label Text="{Binding TopExpenseCategory}"
@@ -89,7 +130,65 @@
                     </Grid>
                 </Border>
 
-                <Label Text="Витрати по категоріях"
+                <Label Text="Income plan"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       Margin="4,6,4,0"/>
+
+                <Border BackgroundColor="#173D34"
+                        StrokeThickness="0"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12">
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,120" ColumnSpacing="10">
+                            <Label Grid.Column="0"
+                                   Text="Expected income"
+                                   TextColor="White"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"/>
+                            <Border Grid.Column="1"
+                                    BackgroundColor="#0F2F28"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 8">
+                                <Entry Text="{Binding PlannedIncomeText, Mode=TwoWay}"
+                                       IsEnabled="{Binding IsCurrentMonth}"
+                                       Keyboard="Numeric"
+                                       Placeholder="0"
+                                       PlaceholderColor="#6B7280"
+                                       TextColor="White"
+                                       FontSize="12"
+                                       HorizontalTextAlignment="End"
+                                       BackgroundColor="Transparent"
+                                       Margin="8,0"/>
+                            </Border>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,70,18,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="8">
+                            <Label Grid.Row="0" Grid.Column="0" Text="For spending" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding SpendingPercentText, Mode=TwoWay}" IsEnabled="{Binding IsCurrentMonth}" Keyboard="Numeric" TextColor="White" BackgroundColor="#0F2F28" HorizontalTextAlignment="End"/>
+                            <Label Grid.Row="0" Grid.Column="2" Text="%" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            <Label Grid.Row="0" Grid.Column="3" Text="{Binding PlannedSpendText}" TextColor="#E24B4A" VerticalOptions="Center"/>
+
+                            <Label Grid.Row="1" Grid.Column="0" Text="Save" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding SavingsPercentText, Mode=TwoWay}" IsEnabled="{Binding IsCurrentMonth}" Keyboard="Numeric" TextColor="White" BackgroundColor="#0F2F28" HorizontalTextAlignment="End"/>
+                            <Label Grid.Row="1" Grid.Column="2" Text="%" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            <Label Grid.Row="1" Grid.Column="3" Text="{Binding PlannedSavingsText}" TextColor="#1D9E75" VerticalOptions="Center"/>
+
+                            <Label Grid.Row="2" Grid.Column="0" Text="Invest" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding InvestmentPercentText, Mode=TwoWay}" IsEnabled="{Binding IsCurrentMonth}" Keyboard="Numeric" TextColor="White" BackgroundColor="#0F2F28" HorizontalTextAlignment="End"/>
+                            <Label Grid.Row="2" Grid.Column="2" Text="%" TextColor="#9CA3AF" VerticalOptions="Center"/>
+                            <Label Grid.Row="2" Grid.Column="3" Text="{Binding PlannedInvestmentText}" TextColor="#7DD3B0" VerticalOptions="Center"/>
+                        </Grid>
+
+                        <Label Text="{Binding IncomePlanStatusText}"
+                               FontSize="12"
+                               TextColor="#9CA3AF"
+                               LineBreakMode="WordWrap"/>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Label Text="Expenses by category"
                        FontSize="16"
                        FontAttributes="Bold"
                        TextColor="White"
@@ -99,7 +198,7 @@
                                      Padding="0,20"
                                      Spacing="6"
                                      HorizontalOptions="Center">
-                    <Label Text="За цей місяць витрат ще немає"
+                    <Label Text="No expenses for this month yet"
                            FontSize="14"
                            TextColor="#9CA3AF"
                            HorizontalOptions="Center"/>
@@ -108,7 +207,7 @@
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding CategoryExpenses}" Spacing="8">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Border BackgroundColor="#16213E"
+                            <Border BackgroundColor="#173D34"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 12"
                                     Padding="12">
@@ -136,8 +235,8 @@
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                                         <ProgressBar Grid.Column="0"
                                                      Progress="{Binding Progress}"
-                                                     ProgressColor="#A78BFA"
-                                                     BackgroundColor="#1E1E3A"
+                                                     ProgressColor="#7DD3B0"
+                                                     BackgroundColor="#1D493F"
                                                      VerticalOptions="Center"/>
                                         <Label Grid.Column="1"
                                                Text="{Binding PercentText}"
@@ -150,7 +249,7 @@
                     </BindableLayout.ItemTemplate>
                 </VerticalStackLayout>
 
-                <Label Text="Бюджети по категоріях"
+                <Label Text="Expense budgets"
                        FontSize="16"
                        FontAttributes="Bold"
                        TextColor="White"
@@ -159,7 +258,7 @@
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding CategoryBudgets}" Spacing="8">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <Border BackgroundColor="#16213E"
+                            <Border BackgroundColor="#173D34"
                                     StrokeThickness="0"
                                     StrokeShape="RoundRectangle 12"
                                     Padding="12">
@@ -178,21 +277,21 @@
                                                TextColor="White"
                                                FontAttributes="Bold"
                                                VerticalOptions="Center"/>
-                                        <Frame Grid.Column="2"
-                                                BackgroundColor="#12122A"
-                                                CornerRadius="8"
-                                                Padding="4,0"
-                                                HasShadow="False"
-                                                BorderColor="Transparent">
+                                        <Border Grid.Column="2"
+                                                BackgroundColor="#0F2F28"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 8">
                                             <Entry Text="{Binding BudgetText, Mode=TwoWay}"
-                                                    Keyboard="Numeric"
-                                                    Placeholder="Бюджет"
-                                                    PlaceholderColor="#6B7280"
-                                                    TextColor="White"
-                                                    FontSize="12"
-                                                    HorizontalTextAlignment="End"
-                                                    BackgroundColor="Transparent"/>
-                                        </Frame>
+                                                   IsEnabled="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.IsCurrentMonth}"
+                                                   Keyboard="Numeric"
+                                                   Placeholder="Budget"
+                                                   PlaceholderColor="#6B7280"
+                                                   TextColor="White"
+                                                   FontSize="12"
+                                                   HorizontalTextAlignment="End"
+                                                   BackgroundColor="Transparent"
+                                                   Margin="8,0"/>
+                                        </Border>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
@@ -208,7 +307,7 @@
 
                                     <ProgressBar Progress="{Binding Progress}"
                                                  ProgressColor="{Binding ProgressColor}"
-                                                 BackgroundColor="#1E1E3A"/>
+                                                 BackgroundColor="#1D493F"/>
 
                                     <Label Text="{Binding RemainingText}"
                                            FontSize="12"
