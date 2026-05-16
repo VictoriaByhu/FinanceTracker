@@ -1,4 +1,4 @@
-﻿using FinanceTracker.DAL.Entities;
+using FinanceTracker.DAL.Entities;
 
 namespace FinanceTracker.MAUI.Services;
 
