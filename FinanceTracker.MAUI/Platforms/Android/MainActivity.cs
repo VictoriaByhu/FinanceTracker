@@ -1,5 +1,6 @@
 using Android.App;
 using Android.Content.PM;
+using Android.Graphics.Drawables;
 using Android.OS;
 using AndroidX.Core.View;
 
@@ -19,7 +20,9 @@ namespace FinanceTracker.MAUI
 
             WindowCompat.SetDecorFitsSystemWindows(Window, true);
 
-            var systemBarsColor = Android.Graphics.Color.ParseColor("#12122A");
+            var systemBarsColor = Android.Graphics.Color.ParseColor("#0F2F28");
+            Window.SetBackgroundDrawable(new ColorDrawable(systemBarsColor));
+            Window.DecorView?.SetBackgroundColor(systemBarsColor);
             Window.SetStatusBarColor(systemBarsColor);
             Window.SetNavigationBarColor(systemBarsColor);
 

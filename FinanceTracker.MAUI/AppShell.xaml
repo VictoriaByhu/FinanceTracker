@@ -5,15 +5,15 @@
        xmlns:views="clr-namespace:FinanceTracker.MAUI.Views">
 
     <TabBar>
-        <ShellContent Title="Транзакції"
+        <ShellContent Title="Transactions"
                       Icon="tab_transactions.svg"
                       ContentTemplate="{DataTemplate views:TransactionListPage}"
                       Route="transactionlist"/>
-        <ShellContent Title="Категорії"
+        <ShellContent Title="Categories"
                       Icon="tab_categories.svg"
                       ContentTemplate="{DataTemplate views:CategoryListPage}"
                       Route="categorylist"/>
-        <ShellContent Title="Аналітика"
+        <ShellContent Title="Analytics"
                       Icon="tab_analytics.svg"
                       ContentTemplate="{DataTemplate views:AnalyticsPage}"
                       Route="analytics"/>
