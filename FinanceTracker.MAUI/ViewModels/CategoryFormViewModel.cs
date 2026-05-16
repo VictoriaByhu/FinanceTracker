@@ -4,9 +4,21 @@ using FinanceTracker.MAUI.Services;
 
 namespace FinanceTracker.MAUI.ViewModels;
 
+[QueryProperty(nameof(CategoryId), "id")]
 public class CategoryFormViewModel : BaseViewModel
 {
     private readonly IDataService _dataService;
+
+    private int _categoryId;
+    public int CategoryId
+    {
+        get => _categoryId;
+        set
+        {
+            _categoryId = value;
+            OnPropertyChanged();
+        }
+    }
 
     private string _name = string.Empty;
     public string Name
@@ -22,6 +34,32 @@ public class CategoryFormViewModel : BaseViewModel
         set { _selectedColor = value; OnPropertyChanged(); }
     }
 
+    private bool _isIncome;
+    public bool IsIncome
+    {
+        get => _isIncome;
+        set
+        {
+            if (_isIncome == value) return;
+            _isIncome = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsExpense));
+            OnPropertyChanged(nameof(TypePreview));
+        }
+    }
+
+    public bool IsExpense
+    {
+        get => !IsIncome;
+        set
+        {
+            if (value)
+                IsIncome = false;
+        }
+    }
+
+    public string TypePreview => IsIncome ? "Income" : "Expense";
+
     public ICommand SaveCommand { get; }
     public ICommand CancelCommand { get; }
     public ICommand SelectColorCommand { get; }
@@ -29,31 +67,45 @@ public class CategoryFormViewModel : BaseViewModel
     public CategoryFormViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        Title = "New Category";
+        Title = "New category";
 
         SaveCommand = new Command(async () =>
         {
+            ErrorMessage = string.Empty;
             if (string.IsNullOrWhiteSpace(Name))
             {
-                await Shell.Current.DisplayAlert("Error", "Please enter a category name", "OK");
+                ErrorMessage = "Enter a category name";
                 return;
             }
             try
             {
                 IsBusy = true;
-                var category = new Category
+                if (CategoryId == 0)
                 {
-                    Name = Name,
-                    Color = SelectedColor,
-                    IsIncome = false
-                };
-                await _dataService.CreateCategoryAsync(category);
-                await Shell.Current.DisplayAlert("Success", "Category saved!", "OK");
+                    var category = new Category
+                    {
+                        Name = Name,
+                        Color = SelectedColor,
+                        IsIncome = IsIncome
+                    };
+                    await _dataService.CreateCategoryAsync(category);
+                }
+                else
+                {
+                    var category = await _dataService.GetCategoryByIdAsync(CategoryId);
+                    if (category is not null)
+                    {
+                        category.Name = Name;
+                        category.Color = SelectedColor;
+                        category.IsIncome = IsIncome;
+                        await _dataService.UpdateCategoryAsync(category);
+                    }
+                }
                 await Shell.Current.GoToAsync("..");
             }
             catch (Exception)
             {
-                await Shell.Current.DisplayAlert("Error", "Failed to save category", "OK");
+                ErrorMessage = "Failed to save category";
             }
             finally
             {
@@ -69,5 +121,32 @@ public class CategoryFormViewModel : BaseViewModel
             if (!string.IsNullOrWhiteSpace(color))
                 SelectedColor = color;
         });
+    }
+
+    public async Task InitializeAsync()
+    {
+        if (CategoryId <= 0)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            Title = "Edit category";
+            var category = await _dataService.GetCategoryByIdAsync(CategoryId);
+            if (category is null)
+                return;
+
+            Name = category.Name;
+            SelectedColor = category.Color;
+            IsIncome = category.IsIncome;
+        }
+        catch (Exception)
+        {
+            ErrorMessage = "Failed to load category";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

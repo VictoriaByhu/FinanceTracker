@@ -9,4 +9,10 @@ public partial class CategoryFormPage : ContentPage
         InitializeComponent();
         BindingContext = vm;
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _ = ((CategoryFormViewModel)BindingContext).InitializeAsync();
+    }
 }

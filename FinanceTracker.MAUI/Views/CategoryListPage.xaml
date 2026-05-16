@@ -2,91 +2,280 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FinanceTracker.MAUI.Views.CategoryListPage"
-             Title="Категорії"
-             BackgroundColor="#12122A">
+             Title="Categories"
+             BackgroundColor="#0F2F28">
 
     <Shell.TitleView>
         <Grid ColumnDefinitions="*,Auto" Padding="0,0,8,0">
-            <Label Text="Категорії"
-                   FontSize="18" FontAttributes="Bold"
-                   TextColor="White" VerticalOptions="Center"/>
-            <ImageButton Grid.Column="1"
-                         Command="{Binding GoToAddCommand}"
-                         BackgroundColor="Transparent"
-                         WidthRequest="36" HeightRequest="36">
-                <ImageButton.Source>
-                    <FontImageSource Glyph="+" Color="#A78BFA" Size="24"/>
-                </ImageButton.Source>
-            </ImageButton>
+            <Label Text="Categories"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   VerticalOptions="Center"/>
+            <Button Grid.Column="1"
+                    Text="+"
+                    Command="{Binding GoToAddCommand}"
+                    BackgroundColor="#2FAF7A"
+                    TextColor="White"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Padding="0"/>
         </Grid>
     </Shell.TitleView>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="12,12,12,0" Spacing="0">
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Padding="12,12,12,0" Spacing="14">
 
-            <!-- Empty state -->
-            <VerticalStackLayout IsVisible="{Binding IsEmpty}"
-                                 HorizontalOptions="Center"
-                                 Padding="0,60,0,0" Spacing="8">
-                <Label Text="🗂" FontSize="40" HorizontalOptions="Center"/>
-                <Label Text="Категорій ще немає"
-                       FontSize="14" TextColor="#9CA3AF"
-                       HorizontalOptions="Center"/>
-                <Label Text="Натисніть + щоб додати"
-                       FontSize="12" TextColor="#6B7280"
-                       HorizontalOptions="Center"/>
-            </VerticalStackLayout>
+                <VerticalStackLayout IsVisible="{Binding IsEmpty}"
+                                     HorizontalOptions="Center"
+                                     Padding="0,60,0,0"
+                                     Spacing="8">
+                    <Label Text="No categories yet"
+                           FontSize="14"
+                           TextColor="#9CA3AF"
+                           HorizontalOptions="Center"/>
+                    <Label Text="Tap + to add one"
+                           FontSize="12"
+                           TextColor="#6B7280"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
 
-            <CollectionView ItemsSource="{Binding Categories}" SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="0,0,0,8">
-                            <Border BackgroundColor="#16213E"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12">
-                                <Grid ColumnDefinitions="Auto,*,Auto,Auto"
-                                      Padding="14,12" ColumnSpacing="12">
+                <Border IsVisible="{Binding HasError}"
+                        BackgroundColor="#3D1A1A"
+                        Stroke="#E24B4A"
+                        StrokeThickness="1"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="12,10">
+                    <Label Text="{Binding ErrorMessage}"
+                           FontSize="13"
+                           TextColor="#FCA5A5"
+                           LineBreakMode="WordWrap"/>
+                </Border>
 
-                                    <!-- Color dot -->
-                                    <Ellipse Grid.Column="0"
-                                             WidthRequest="10" HeightRequest="10"
-                                             VerticalOptions="Center">
-                                        <Ellipse.Fill>
-                                            <Binding Path="Color"
-                                                     Converter="{StaticResource StringToColorConverter}"/>
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Expense categories"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           Margin="4,0"/>
 
-                                    <!-- Name -->
-                                    <Label Grid.Column="1"
-                                           Text="{Binding Name}"
-                                           FontSize="14" TextColor="White"
-                                           VerticalOptions="Center"/>
+                    <Label Text="No expense categories yet"
+                           IsVisible="{Binding HasExpenseCategories, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="13"
+                           TextColor="#6B7280"
+                           Margin="4,4"/>
 
-                                    <!-- Transaction count -->
-                                    <Label Grid.Column="2"
-                                           Text="{Binding Transactions.Count, StringFormat='{0} транз.'}"
-                                           FontSize="11" TextColor="#6B7280"
-                                           VerticalOptions="Center"/>
+                    <CollectionView ItemsSource="{Binding ExpenseCategories}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="0,0,0,8">
+                                    <Border BackgroundColor="#173D34"
+                                            StrokeThickness="1"
+                                            Stroke="#2D5A4F"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToEditCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
 
-                                    <!-- Delete -->
-                                    <ImageButton Grid.Column="3"
-                                                 WidthRequest="32" HeightRequest="32"
-                                                 BackgroundColor="Transparent"
-                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                                 CommandParameter="{Binding .}">
-                                        <ImageButton.Source>
-                                            <FontImageSource Glyph="🗑" Color="#6B7280" Size="16"/>
-                                        </ImageButton.Source>
-                                    </ImageButton>
+                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+                                              Padding="14,12"
+                                              ColumnSpacing="12">
+                                            <Ellipse Grid.Column="0"
+                                                     WidthRequest="10"
+                                                     HeightRequest="10"
+                                                     VerticalOptions="Center">
+                                                <Ellipse.Fill>
+                                                    <Binding Path="Color" Converter="{StaticResource StringToColorConverter}"/>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Name}"
+                                                   FontSize="14"
+                                                   TextColor="White"
+                                                   VerticalOptions="Center"/>
+
+                                            <Label Grid.Column="2"
+                                                   Text="Expense"
+                                                   FontSize="11"
+                                                   TextColor="#E24B4A"
+                                                   VerticalOptions="Center"/>
+
+                                            <Label Grid.Column="3"
+                                                   Text="✎"
+                                                   WidthRequest="24"
+                                                   HeightRequest="24"
+                                                   FontSize="13"
+                                                   TextColor="#7DD3B0"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToEditCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+
+                                            <Label Grid.Column="4"
+                                                   Text="×"
+                                                   WidthRequest="24"
+                                                   HeightRequest="24"
+                                                   FontSize="17"
+                                                   TextColor="#6B7280"
+                                                   FontAttributes="Bold"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </Grid>
+                                    </Border>
                                 </Grid>
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
 
-            <Grid HeightRequest="80"/>
-        </VerticalStackLayout>
-    </ScrollView>
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Income categories"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           Margin="4,4,4,0"/>
+
+                    <Label Text="No income categories yet"
+                           IsVisible="{Binding HasIncomeCategories, Converter={StaticResource InverseBoolConverter}}"
+                           FontSize="13"
+                           TextColor="#6B7280"
+                           Margin="4,4"/>
+
+                    <CollectionView ItemsSource="{Binding IncomeCategories}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="0,0,0,8">
+                                    <Border BackgroundColor="#173D34"
+                                            StrokeThickness="1"
+                                            Stroke="#2D5A4F"
+                                            StrokeShape="RoundRectangle 14">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToEditCommand}"
+                                                CommandParameter="{Binding .}"/>
+                                        </Border.GestureRecognizers>
+
+                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto"
+                                              Padding="14,12"
+                                              ColumnSpacing="12">
+                                            <Ellipse Grid.Column="0"
+                                                     WidthRequest="10"
+                                                     HeightRequest="10"
+                                                     VerticalOptions="Center">
+                                                <Ellipse.Fill>
+                                                    <Binding Path="Color" Converter="{StaticResource StringToColorConverter}"/>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+
+                                            <Label Grid.Column="1"
+                                                   Text="{Binding Name}"
+                                                   FontSize="14"
+                                                   TextColor="White"
+                                                   VerticalOptions="Center"/>
+
+                                            <Label Grid.Column="2"
+                                                   Text="Income"
+                                                   FontSize="11"
+                                                   TextColor="#1D9E75"
+                                                   VerticalOptions="Center"/>
+
+                                            <Label Grid.Column="3"
+                                                   Text="✎"
+                                                   WidthRequest="24"
+                                                   HeightRequest="24"
+                                                   FontSize="13"
+                                                   TextColor="#7DD3B0"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.GoToEditCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+
+                                            <Label Grid.Column="4"
+                                                   Text="×"
+                                                   WidthRequest="24"
+                                                   HeightRequest="24"
+                                                   FontSize="17"
+                                                   TextColor="#6B7280"
+                                                   FontAttributes="Bold"
+                                                   HorizontalTextAlignment="Center"
+                                                   VerticalTextAlignment="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer
+                                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                                        CommandParameter="{Binding .}"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+
+                <Grid HeightRequest="80"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid IsVisible="{Binding IsDeleteDialogVisible}"
+              BackgroundColor="#99000000"
+              Padding="22">
+            <Border BackgroundColor="#173D34"
+                    Stroke="#2D5A4F"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 18"
+                    Padding="20"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="Heads up"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White"/>
+                    <Label Text="{Binding DeleteDialogMessage}"
+                           FontSize="14"
+                           TextColor="#D1D5DB"
+                           LineBreakMode="WordWrap"/>
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Margin="0,8,0,0">
+                        <Button Grid.Column="0"
+                                Text="No"
+                                Command="{Binding CancelDeleteCommand}"
+                                BackgroundColor="#1D493F"
+                                TextColor="#D1D5DB"
+                                CornerRadius="14"
+                                HeightRequest="46"/>
+                        <Button Grid.Column="1"
+                                Text="Yes"
+                                Command="{Binding ConfirmDeleteCommand}"
+                                BackgroundColor="#2FAF7A"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="14"
+                                HeightRequest="46"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
 </ContentPage>
