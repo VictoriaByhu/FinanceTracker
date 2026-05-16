@@ -1,11 +1,11 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
 namespace FinanceTracker.MAUI.Converters;
 
 /// <summary>
-/// true (income) → "#1D9E75" | false (expense) → "#E24B4A"
+/// true (income) > "#1D9E75" | false (expense) > "#E24B4A"
 /// </summary>
 public class BoolToAmountColorConverter : IValueConverter
 {
@@ -19,7 +19,7 @@ public class BoolToAmountColorConverter : IValueConverter
 }
 
 /// <summary>
-/// true (income) → rgba(29,158,117,0.15) | false → rgba(226,75,74,0.15)
+/// true (income) > rgba(29,158,117,0.15) | false > rgba(226,75,74,0.15)
 /// </summary>
 public class BoolToBadgeBgConverter : IValueConverter
 {
@@ -35,7 +35,7 @@ public class BoolToBadgeBgConverter : IValueConverter
 }
 
 /// <summary>
-/// true (income) → background tint green | false → red (for icon background)
+/// true (income) > background tint green | false > red (for icon background)
 /// </summary>
 public class BoolToIncomeColorConverter : IValueConverter
 {
@@ -51,38 +51,38 @@ public class BoolToIncomeColorConverter : IValueConverter
 }
 
 /// <summary>
-/// true (income) → "💰" | false (expense) → "💸"
+/// true (income) > upward trend icon | false (expense) > downward trend icon
 /// </summary>
 public class BoolToIconConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         bool isIncome = value is bool b && b;
-        return isIncome ? "💰" : "💸";
+        return isIncome ? "\u2197" : "\u2198";
     }
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
 }
 
 /// <summary>
-/// true (income) → "+₴{amount}" | false → "−₴{amount}"
-/// Used with Amount value, IsIncome passed via parameter (not ideal — see ViewModel AmountFormatted instead)
+/// true (income) > "+?{amount}" | false > "??{amount}"
+/// Used with Amount value, IsIncome passed via parameter (not ideal � see ViewModel AmountFormatted instead)
 /// </summary>
 public class AmountSignConverter : IValueConverter
 {
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is not decimal amount) return "₴0";
+        if (value is not decimal amount) return "?0";
         bool isIncome = parameter is bool b && b;
-        string sign = isIncome ? "+" : "−";
-        return $"{sign}₴{amount:N0}";
+        string sign = isIncome ? "+" : "?";
+        return $"{sign}?{amount:N0}";
     }
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
 }
 
 /// <summary>
-/// "#1D9E75" (string) → Color
+/// "#1D9E75" (string) > Color
 /// Falls back to "#607D8B" if parse fails.
 /// </summary>
 public class StringToColorConverter : IValueConverter
@@ -98,4 +98,13 @@ public class StringToColorConverter : IValueConverter
     }
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotImplementedException();
+}
+
+public class InverseBoolConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is bool b && !b;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is bool b && !b;
 }

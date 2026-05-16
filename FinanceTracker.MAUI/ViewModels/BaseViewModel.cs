@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FinanceTracker.MAUI.ViewModels;
@@ -25,6 +25,20 @@ public abstract class BaseViewModel : INotifyPropertyChanged
     }
 
     public bool IsNotBusy => !IsBusy;
+
+    private string _errorMessage = string.Empty;
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        set
+        {
+            _errorMessage = value;
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(HasError));
+        }
+    }
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
 
     private string _title = string.Empty;
     public string Title
